@@ -1,0 +1,2287 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zeerow Studio — Edição Short-Form de Alta Retenção | TikTok, Reels & Shorts</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter, Space Grotesk & JetBrains Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&family=Space+Grotesk:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Space Grotesk', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    colors: {
+                        bgMain: '#080306',
+                        bgCard: '#12070c',
+                        bgElevated: '#1a0a11',
+                        neonPurple: '#ff0f4b',
+                        neonCyan: '#ff6600',
+                        neonEmerald: '#ffaa00',
+                        zeerowCrimson: '#ff0f4b',
+                        zeerowOrange: '#ff5e00',
+                        zeerowAmber: '#ffaa00',
+                        premiereBlue: '#ff5e00',
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 5s ease-in-out infinite',
+                        'zoom-punch': 'zoomPunch 2.4s cubic-bezier(0.22, 1, 0.36, 1) infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-8px)' },
+                        },
+                        zoomPunch: {
+                            '0%, 100%': { transform: 'scale(1)' },
+                            '12%': { transform: 'scale(1.11) rotate(-0.8deg)' },
+                            '24%': { transform: 'scale(1.53)' },
+                            '55%': { transform: 'scale(1.14) rotate(0.8deg)' },
+                            '68%': { transform: 'scale(1)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        :root {
+            --cursor-x: 50%;
+            --cursor-y: 50%;
+        }
+
+        body {
+            background-color: #080306;
+            color: #f4f4f6;
+            overflow-x: hidden;
+            selection-background-color: #ff0f4b;
+        }
+
+        .logo-screen-blend {
+            mix-blend-mode: screen;
+            filter: drop-shadow(0 0 14px rgba(255, 94, 0, 0.35));
+            transition: transform 0.3s ease, filter 0.3s ease;
+        }
+        .logo-screen-blend:hover {
+            filter: drop-shadow(0 0 24px rgba(255, 15, 75, 0.85));
+        }
+
+        .bg-grid-pattern {
+            background-size: 42px 42px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 94, 0, 0.035) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 15, 75, 0.035) 1px, transparent 1px);
+        }
+
+        .spotlight-card {
+            position: relative;
+            background: rgba(18, 7, 12, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 120, 50, 0.12);
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .spotlight-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(
+                550px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+                rgba(255, 15, 75, 0.16),
+                rgba(255, 102, 0, 0.08) 40%,
+                transparent 80%
+            );
+            opacity: 0;
+            transition: opacity 0.35s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .spotlight-card:hover::before {
+            opacity: 1;
+        }
+
+        .spotlight-card:hover {
+            border-color: rgba(255, 94, 0, 0.48);
+            box-shadow: 0 20px 45px -15px rgba(255, 15, 75, 0.25);
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px) scale(0.98);
+            transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1), transform 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .timeline-ruler {
+            background-image: repeating-linear-gradient(
+                to right,
+                rgba(255, 255, 255, 0.22) 0px,
+                rgba(255, 255, 255, 0.22) 1px,
+                transparent 1px,
+                transparent 12px
+            );
+        }
+
+        .keyframe-diamond {
+            width: 9px;
+            height: 9px;
+            transform: rotate(45deg);
+            transition: all 0.25s ease;
+        }
+
+        .keyframe-btn:hover .keyframe-diamond,
+        .keyframe-btn.active .keyframe-diamond {
+            background-color: #ffaa00;
+            box-shadow: 0 0 10px #ff6600;
+            transform: rotate(45deg) scale(1.3);
+        }
+
+        input[type="range"].custom-slider {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            background: linear-gradient(90deg, #ff0f4b 0%, #ff5e00 50%, #ffaa00 100%);
+            border-radius: 999px;
+            outline: none;
+        }
+
+        input[type="range"].custom-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #ffffff;
+            border: 4px solid #ff0f4b;
+            box-shadow: 0 0 18px rgba(255, 94, 0, 0.95);
+            cursor: pointer;
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"].custom-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        .custom-checkbox-box {
+            transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .custom-checkbox-input:checked + .custom-checkbox-box {
+            background: linear-gradient(135deg, #ff0f4b 0%, #ff6600 55%, #ffaa00 100%);
+            border-color: #ffaa00;
+            box-shadow: 0 0 20px rgba(255, 102, 0, 0.6);
+            animation: checkPop 0.38s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        .custom-check-svg path {
+            stroke-dasharray: 24;
+            stroke-dashoffset: 24;
+            transition: stroke-dashoffset 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .custom-checkbox-input:checked + .custom-checkbox-box .custom-check-svg path {
+            stroke-dashoffset: 0;
+        }
+
+        .custom-checkbox-input:checked + .custom-checkbox-box .custom-checkbox-glow {
+            animation: rippleGlow 0.55s ease-out forwards;
+        }
+
+        @keyframes checkPop {
+            0% { transform: scale(0.8); }
+            50% { transform: scale(1.18) rotate(-4deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+
+        @keyframes rippleGlow {
+            0% { transform: scale(0.8); opacity: 0.85; }
+            100% { transform: scale(1.95); opacity: 0; }
+        }
+
+        @keyframes audioWave {
+            0%, 100% { height: 22%; }
+            50% { height: 95%; }
+        }
+
+        .wave-bar {
+            animation: audioWave 0.55s ease-in-out infinite;
+        }
+
+        @keyframes captionPop {
+            0% { transform: scale(0.75) rotate(-2deg); opacity: 0.4; }
+            60% { transform: scale(1.1) rotate(1deg); opacity: 1; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        .caption-pop {
+            animation: captionPop 0.28s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080306;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2e101b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ff5e00;
+        }
+/* Container da Pílula de Idiomas */
+.lang-format-pill {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 0.75rem;
+    padding: 3px;
+}
+
+/* Fundo Neon que desliza entre PT, EN e ES */
+.lang-glider {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 3px;
+    width: 36px;
+    border-radius: 0.55rem;
+    background: linear-gradient(135deg, #ff0f4b 0%, #ff5e00 55%, #ffaa00 100%);
+    box-shadow: 0 0 14px rgba(255, 15, 75, 0.55);
+    transition: transform 0.38s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 0;
+}
+
+/* Botões individuais (PT, EN, ES) */
+.lang-btn {
+    position: relative;
+    z-index: 1;
+    width: 36px;
+    height: 28px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 700;
+    color: #9ca3af;
+    transition: color 0.25s ease;
+}
+
+.lang-btn:hover {
+    color: #ffffff;
+}
+
+.lang-btn.active {
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.5);
+}
+
+/* Animação 3D de troca da bandeira */
+.flag-flip {
+    animation: flipFlag 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes flipFlag {
+    0% { transform: scale(0.5) rotateY(180deg); opacity: 0.3; }
+    60% { transform: scale(1.2) rotateY(0deg); opacity: 1; }
+    100% { transform: scale(1) rotateY(0deg); opacity: 1; }
+}
+    </style>
+</head>
+<body class="bg-bgMain text-gray-100 font-sans antialiased selection:bg-neonPurple selection:text-white">
+
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute -top-36 -left-36 w-[440px] h-[440px] bg-[#ff0f4b]/25 rounded-full blur-[140px]"></div>
+        <div class="absolute top-1/3 -right-36 w-[420px] h-[420px] bg-[#ff5e00]/20 rounded-full blur-[150px]"></div>
+        <div class="absolute -bottom-36 right-1/4 w-[450px] h-[450px] bg-[#ffaa00]/15 rounded-full blur-[150px]"></div>
+    </div>
+
+<!-- HEADER -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-[#080306]/85 backdrop-blur-xl border-b border-white/10">
+        
+        <div class="w-full px-4 sm:px-8 lg:px-12 h-16 grid grid-cols-2 lg:grid-cols-3 items-center">
+            
+            <!-- 1. ESQUERDA: Apenas o Logo -->
+            <div class="flex items-center justify-start">
+                <a href="#" class="flex items-center group py-1">
+                    <img src="Logo 3@5x.png" alt="Zeerow Studio" class="w-auto object-contain logo-screen-blend" style="height: 58px; transform: scale(1.75); transform-origin: left center;">
+                </a>
+            </div>
+
+            <!-- 2. MEIO: Agenda + Menu de Navegação -->
+            <nav class="hidden lg:flex items-center justify-center gap-6 text-sm font-medium text-gray-300">
+                
+
+                <a href="#feedbacks" class="hover:text-neonCyan transition">Feedbacks</a>
+                <a href="#portfolio" class="hover:text-neonCyan transition">Portfólio</a>
+                <a href="#calculadora" class="hover:text-neonCyan transition">Simulador</a>
+                <a href="#processo" class="hover:text-neonCyan transition">Processo</a>
+                <a href="#faq" class="hover:text-neonCyan transition">FAQ</a>
+            </nav>
+
+            <!-- 3. DIREITA: Seletor de Idiomas -->
+            <div class="flex items-center justify-end">
+                <div class="flex items-center justify-center gap-2 bg-white/[0.03] border border-white/10 rounded-xl px-5 py-0">
+                    <img id="langFlagImg" src="https://flagcdn.com/w40/br.png" alt="Português (Brasil)" class="w-5 h-3.5 object-cover rounded-[3px] shadow-sm border border-white/20">
+
+                    <div class="lang-format-pill">
+                        <div id="langGlider" class="lang-glider" style="transform: translateX(0px);"></div>
+                        <button type="button" onclick="changeLanguage('pt', 0)" id="btnLang-pt" class="lang-btn active" title="Português (Brasil)">PT</button>
+                        <button type="button" onclick="changeLanguage('en', 1)" id="btnLang-en" class="lang-btn" title="English">EN</button>
+                        <button type="button" onclick="changeLanguage('es', 2)" id="btnLang-es" class="lang-btn" title="Español">ES</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- O resto do header (timeline/barra de progresso) continua aqui em baixo normalmente... -->
+
+        <!-- Barra de Progresso / Timeline continua aqui em baixo normalmente... -->
+            </div>
+        </div>
+
+        <div class="relative h- bg-[#0d0509] border-t border-white/10 select-none overflow-hidden flex items-center px-2 sm:px-2">
+            <div class="flex items-center gap-2 pr-3 border-r border-white/10 z-20 bg-[#0d0509]">
+                <span class="w-2 h-2 rounded-full bg-[#ff0f4b] animate-pulse" title="REC / Playhead Ativo"></span>
+                <span id="headerTimecode" class="font-mono text-xs sm:text-sm font-bold text-neonEmerald tracking-wider">00:00:00:00</span>
+                <span class="hidden sm:inline text-[10px] font-mono text-gray-500 bg-white/5 px-1.5 py-0.5 rounded">60 FPS</span>
+            </div>
+
+            <div class="relative flex-1 h-full flex items-center mx-3 timeline-ruler" id="timelineTrackContainer">
+                <div id="timelineProgressFill" class="absolute left-0 top-0 bottom-0 bg-gradient-to-r from-[#ff0f4b]/35 via-[#ff5e00]/35 to-[#ffaa00]/40 border-r-2 border-neonEmerald transition-all duration-75 pointer-events-none" style="width: 2%;"></div>
+                <div id="timelinePlayhead" class="absolute top-0 bottom-0 w-0.5 bg-neonEmerald shadow-[0_0_12px_#ffaa00] pointer-events-none z-20 transition-all duration-75" style="left: 2%;">
+                    <div class="w-3 h-2.5 -ml-[5px] bg-neonEmerald clip-playhead rounded-b-sm"></div>
+                </div>
+
+                <div class="relative z-10 w-full flex justify-between items-center px-2 text-[10px] font-mono text-gray-400">
+                    <button onclick="scrollToSection('hero')" class="keyframe-btn active flex items-center gap-1.5 hover:text-white transition" data-progress="0">
+                        <div class="keyframe-diamond bg-neonPurple border border-white/50"></div>
+                        <span class="hidden md:inline">01. Inicio</span>
+                    </button>
+                    <button onclick="scrollToSection('feedbacks')" class="keyframe-btn flex items-center gap-1.5 hover:text-white transition" data-progress="30">
+                        <div class="keyframe-diamond bg-gray-600 border border-white/40"></div>
+                        <span class="hidden md:inline">02. FEEDBACKS</span>
+                    </button>
+                    <button onclick="scrollToSection('portfolio')" class="keyframe-btn flex items-center gap-1.5 hover:text-white transition" data-progress="80">
+                        <div class="keyframe-diamond bg-gray-600 border border-white/40"></div>
+                        <span class="hidden md:inline">03. PORTFÓLIO</span>
+                    </button>
+                    <button onclick="scrollToSection('calculadora')" class="keyframe-btn flex items-center gap-1.5 hover:text-white transition" data-progress="90">
+                        <div class="keyframe-diamond bg-gray-600 border border-white/40"></div>
+                        <span class="hidden md:inline">04. PACOTES</span>
+                    </button>
+                    <button onclick="scrollToSection('processo')" class="keyframe-btn flex items-center gap-1.5 hover:text-white transition" data-progress="100">
+                        <div class="keyframe-diamond bg-gray-600 border border-white/40"></div>
+                        <span class="hidden md:inline">05. RENDER FINAL</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="hidden xl:flex items-center gap-2 pl-3 border-l border-white/10 text-[11px] font-mono text-gray-400">
+                <i class="fa-solid fa-film text-neonPurple"></i>
+                <span>ZEEROW_STUDIO_1080x1920.prproj</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section id="hero" class="relative pt-32 pb-16 lg:pt-36 lg:pb-24 bg-grid-pattern overflow-hidden z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
+                
+                <div class="lg:col-span-7 space-y-6 text-left">
+                    <div class="inline-flex items-center gap-3 p-1.5 pr-4 rounded-full bg-white/[0.04] border border-white/15 text-xs sm:text-sm text-gray-200 shadow-lg shadow-[#ff0f4b]/10">
+                        <img src="zeerowstudio.png" alt="Zeerow Studio Emblem" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#ff5e00]">
+                        <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-[#ff0f4b]/30 to-[#ff5e00]/30 text-amber-300 font-mono font-bold text-xs border border-[#ff5e00]/40">ZEEROW STUDIO</span>
+                        <span class="text-gray-200 font-medium">Edição Short-Form de Alta Retenção</span>
+                    </div>
+
+                    <h1 class="font-display font-extrabold text-4xl sm:text-5xl xl:text-6xl leading-[1.08] tracking-tight text-white">
+                        Transformo Gravações Brutas em <span class="text-transparent bg-clip-text bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00]">Máquinas de Retenção Viral.</span>
+                    </h1>
+
+                    <p class="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                        Nos primeiros <strong class="text-white font-semibold">3 segundos</strong> o espectador decide se assiste até o final ou desliza para cima. Na <strong class="text-white">Zeerow Studio</strong>, domino o <span class="text-neonCyan font-semibold">pacing cirúrgico</span>, legendas dinâmicas hipnóticas e <span class="text-neonEmerald font-semibold">sound design em camadas</span> no <strong class="text-white">Premiere Pro</strong> para escalar suas views em tempo recorde.
+                    </p>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                        <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-neonPurple/15 border border-neonPurple/30 flex items-center justify-center text-neonPurple shrink-0">
+                                <i class="fa-solid fa-magnet"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Hooks de 85%+</div>
+                                <div class="text-[11px] text-gray-400">Quebra de padrão 0-3s</div>
+                            </div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-neonCyan/15 border border-neonCyan/30 flex items-center justify-center text-neonCyan shrink-0">
+                                <i class="fa-solid fa-wave-square"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Sound Design 3D</div>
+                                <div class="text-[11px] text-gray-400">SFX, Risers & Dopamina</div>
+                            </div>
+                        </div>
+                        <div class="p-3.5 rounded-xl bg-white/[0.03] border border-white/10 flex items-center gap-3">
+                            <div class="w-9 h-9 rounded-lg bg-neonEmerald/15 border border-neonEmerald/30 flex items-center justify-center text-neonEmerald shrink-0">
+                                <i class="fa-solid fa-bolt"></i>
+                            </div>
+                            <div>
+                                <div class="text-xs font-bold text-white">Entrega 24h-48h</div>
+                                <div class="text-[11px] text-gray-400">Escala sem atrasos</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 pt-2">
+                        <a href="#calculadora" onclick="playUISound('whoosh')" class="inline-flex items-center justify-center gap-3 px-7 py-4 rounded-2xl font-display font-bold text-base text-white bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] hover:brightness-110 transition shadow-xl shadow-[#ff0f4b]/30 active:scale-95">
+                            <span>Simular Meu Pacote Agora</span>
+                            <i class="fa-solid fa-arrow-right"></i>
+                        </a>
+                        <a href="#portfolio" onclick="playUISound('click')" class="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl font-display font-semibold text-base text-gray-200 bg-white/[0.05] hover:bg-white/[0.1] border border-white/15 transition">
+                            <i class="fa-solid fa-play text-neonEmerald"></i>
+                            <span>Ver Portfólio</span>
+                        </a>
+                    </div>
+
+                    <div class="pt-3 flex flex-wrap items-center gap-4 text-xs text-gray-400 border-t border-white/10">
+                        <div class="flex items-center -space-x-2">
+                            <img src="redenextlogo12.png" alt="Zeerow Studio" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#0096cd]">
+                            <img src="Formigaolokoprofile.jpg" alt="Zeerow Studio" class="w-8 h-8 rounded-full object-cover ring-2 ring-[#390101]">
+                        </div>
+                        <span>Estúdio escolhido por <strong class="text-white">Infoprodutores & Streamers</strong> para dominar o feed.</span>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 flex flex-col items-center">
+                    <div class="mb-4 p-1.5 rounded-2xl bg-[#16080f] border border-white/15 flex items-center gap-1.5 shadow-xl">
+                        <button id="btnModeRaw" onclick="setPhoneEditMode('raw')" class="px-3.5 py-2 rounded-xl text-xs font-display font-bold transition flex items-center gap-1.5 text-gray-400 hover:text-white">
+                            <i class="fa-solid fa-video-slash"></i>
+                            <span>Vídeo Bruto (Sem Edição)</span>
+                        </button>
+                        <button id="btnModeEdited" onclick="setPhoneEditMode('edited')" class="px-4 py-2 rounded-xl text-xs font-display font-bold transition flex items-center gap-1.5 bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] text-white shadow-lg shadow-[#ff0f4b]/30">
+                            <i class="fa-solid fa-wand-magic-sparkles"></i>
+                            <span>Editado Zeerow 🔥</span>
+                        </button>
+                    </div>
+
+                    <div class="relative w-[305px] sm:w-[330px] aspect-[9/16] rounded-[40px] p-3 bg-gradient-to-b from-stone-700 via-stone-900 to-black shadow-[0_0_75px_-10px_rgba(255,94,0,0.45)] border border-white/20 select-none">
+                        <div class="absolute top-5 left-1/2 -translate-x-1/2 w-24 h-5 bg-black rounded-full z-30 flex items-center justify-end px-2.5">
+                            <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                        </div>
+
+                        <div id="phoneScreen" class="relative w-full h-full rounded-[30px] overflow-hidden bg-[#100509] flex flex-col justify-between transition-all duration-500">
+                            <div id="phoneVideoBg" class="absolute inset-0 bg-gradient-to-br from-[#2b0918] via-[#17070e] to-[#080306] animate-zoom-punch transition-all duration-500">
+                                <div id="phoneVisualEffects" class="absolute inset-0">
+                                    <div class="absolute inset-0 opacity-30 bg-[radial-gradient(#ff5e00_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                                    <div id="creatorGlow" class="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 rounded-full bg-[#ff0f4b]/35 blur-2xl animate-pulse"></div>
+                                </div>
+
+                                <div class="absolute inset-0 flex flex-col items-center justify-center pt-4 pointer-events-none">
+                                    <div id="brollFloatingBadge" class="mb-3 px-3 py-1 rounded-lg bg-amber-500/20 border border-amber-400/50 backdrop-blur-md text-amber-300 font-mono text-[11px] font-bold flex items-center gap-1.5 shadow-lg animate-bounce">
+                                        <i class="fa-solid fa-fire-flame-curved"></i>
+                                        <span id="brollBadgeText">B-ROLL + SFX: VIRAL HOOK 🔥</span>
+                                    </div>
+
+                                    <div id="creatorAvatarFrame" class="relative w-32 h-32 rounded-3xl bg-gradient-to-tr from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] p-1 shadow-2xl transition-all duration-500">
+                                        <div class="w-full h-full rounded-[20px] bg-[#14060c] flex flex-col items-center justify-center relative overflow-hidden">
+                                            <img src="zeerowstudio.png" alt="Zeerow Studio" class="absolute inset-0 w-full h-full object-cover opacity-85">
+                                            <div class="relative z-10 mt-auto mb-1.5 flex flex-col items-center">
+                                                <i id="creatorFaceIcon" class="fa-solid fa-bolt-lightning text-lg text-amber-300 drop-shadow"></i>
+                                                <span id="creatorActionLabel" class="text-[9px] font-mono uppercase tracking-wider text-white font-bold px-2 py-0.5 rounded bg-black/80 border border-white/15">ZOOM PUNCH 115%</span>
+                                            </div>
+                                        </div>
+                                        <div id="phoneSticker" class="absolute -right-3 -top-3 w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 text-black flex items-center justify-center text-xl shadow-lg rotate-12 font-bold">
+                                            🔥
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="relative z-20 pt-9 px-4 flex items-center justify-between">
+                                <div id="retentionLivePill" class="px-2.5 py-1 rounded-lg bg-amber-500/20 border border-amber-400/40 backdrop-blur-md flex items-center gap-1.5">
+                                    <span id="retentionDot" class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+                                    <span id="retentionValueText" class="font-mono text-[11px] font-bold text-amber-300">RETENÇÃO: 92%</span>
+                                </div>
+                                <div class="px-2 py-1 rounded bg-black/60 backdrop-blur-md font-mono text-[10px] text-gray-300 border border-white/10" id="phoneFrameCounter">
+                                    TC 00:02:18
+                                </div>
+                            </div>
+
+                            <div class="relative z-20 my-auto px-4 pt-28 text-center pointer-events-none">
+                                <div id="captionContainer" class="inline-block px-3.5 py-2 rounded-2xl bg-black/80 border border-white/15 backdrop-blur-md shadow-2xl">
+                                    <p id="dynamicCaptionText" class="font-display font-extrabold text-lg leading-tight uppercase tracking-wide text-white caption-pop">
+                                        SEU VÍDEO PRECISA PRENDER NOS <span class="text-amber-300 underline decoration-[#ff0f4b] decoration-4">3 SEGUNDOS!</span> 🚀
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="relative z-20 p-3.5 bg-gradient-to-t from-black via-black/90 to-transparent space-y-2.5">
+                                <div class="flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-xl bg-white/[0.06] border border-white/10">
+                                    <div class="flex items-center gap-1.5">
+                                        <i class="fa-solid fa-headphones text-neonEmerald text-xs"></i>
+                                        <span id="sfxTagDisplay" class="font-mono text-[10px] font-bold text-neonEmerald">SFX: WHOOSH + SUB DROP</span>
+                                    </div>
+                                    <div id="waveformBars" class="flex items-end gap-0.5 h-4">
+                                        <span class="w-1 bg-[#ff0f4b] rounded-full wave-bar" style="animation-delay: 0.0s"></span>
+                                        <span class="w-1 bg-[#ff5e00] rounded-full wave-bar" style="animation-delay: 0.15s"></span>
+                                        <span class="w-1 bg-[#ffaa00] rounded-full wave-bar" style="animation-delay: 0.3s"></span>
+                                        <span class="w-1 bg-[#ff0f4b] rounded-full wave-bar" style="animation-delay: 0.1s"></span>
+                                        <span class="w-1 bg-[#ff5e00] rounded-full wave-bar" style="animation-delay: 0.25s"></span>
+                                        <span class="w-1 bg-[#ffaa00] rounded-full wave-bar" style="animation-delay: 0.05s"></span>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-3 gap-1.5">
+                                    <button onclick="triggerPhoneEffect('zoom')" class="py-1.5 px-2 rounded-lg bg-[#ff0f4b]/20 hover:bg-[#ff0f4b]/40 border border-[#ff0f4b]/40 text-[10px] font-mono font-bold text-rose-200 transition active:scale-95">
+                                        ⚡ ZOOM PUNCH
+                                    </button>
+                                    <button onclick="triggerPhoneEffect('sfx')" class="py-1.5 px-2 rounded-lg bg-[#ff5e00]/20 hover:bg-[#ff5e00]/40 border border-[#ff5e00]/40 text-[10px] font-mono font-bold text-orange-200 transition active:scale-95">
+                                        🔊 DROP SFX
+                                    </button>
+                                    <button onclick="triggerPhoneEffect('broll')" class="py-1.5 px-2 rounded-lg bg-[#ffaa00]/20 hover:bg-[#ffaa00]/40 border border-[#ffaa00]/40 text-[10px] font-mono font-bold text-amber-200 transition active:scale-95">
+                                        🎬 B-ROLL POP
+                                    </button>
+                                </div>
+
+                                <div class="space-y-1 pt-1 border-t border-white/10 font-mono text-[9px]">
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-gray-400 w-6">V2</span>
+                                        <div id="trackV2" class="flex-1 h-2 rounded bg-[#ff0f4b]/70 overflow-hidden flex gap-1 px-1">
+                                            <span class="w-1/4 h-full bg-amber-300"></span>
+                                            <span class="w-1/3 h-full bg-[#ff5e00]"></span>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center gap-1">
+                                        <span class="text-gray-400 w-6">A1</span>
+                                        <div id="trackA1" class="flex-1 h-2 rounded bg-[#ffaa00]/75"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p class="mt-3 text-xs text-gray-400 flex items-center gap-1.5">
+                        <i class="fa-solid fa-hand-pointer text-neonEmerald animate-bounce"></i>
+                        <span>Clique nos botões acima para testar <strong>Bruto vs. Editado</strong> em tempo real!</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- METRICS -->
+    <section id="metricas" class="relative py-12 border-y border-white/10 bg-[#0e0509]/90 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="spotlight-card rounded-2xl p-6 reveal">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono uppercase tracking-wider text-neonPurple font-semibold">Alcance Orgânico</span>
+                        <i class="fa-solid fa-eye text-neonPurple text-lg"></i>
+                    </div>
+                    <div class="font-display font-extrabold text-3xl sm:text-4xl text-white flex items-baseline gap-1">
+                        <span>+</span>
+                        <span class="counter-value" data-target="15">0</span>
+                        <span class="text-neonPurple">M</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Visualizações geradas em TikTok, Reels e Shorts de clientes.</p>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full mt-4 overflow-hidden">
+                        <div class="scroll-progress-bar h-full bg-gradient-to-r from-neonPurple to-neonCyan rounded-full transition-all duration-1000 w-0" data-width="94%"></div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-2xl p-6 reveal">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono uppercase tracking-wider text-neonCyan font-semibold">Hook Inegociável</span>
+                        <i class="fa-solid fa-magnet text-neonCyan text-lg"></i>
+                    </div>
+                    <div class="font-display font-extrabold text-3xl sm:text-4xl text-white flex items-baseline gap-1">
+                        <span class="counter-value" data-target="84">0</span>
+                        <span class="text-neonCyan">%</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Retenção média nos 3s iniciais (fim do efeito deslizar para cima).</p>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full mt-4 overflow-hidden">
+                        <div class="scroll-progress-bar h-full bg-gradient-to-r from-neonCyan to-neonEmerald rounded-full transition-all duration-1000 w-0" data-width="84%"></div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-2xl p-6 reveal">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono uppercase tracking-wider text-neonEmerald font-semibold">Workflow Premiere</span>
+                        <i class="fa-solid fa-gauge-high text-neonEmerald text-lg"></i>
+                    </div>
+                    <div class="font-display font-extrabold text-3xl sm:text-4xl text-white flex items-baseline gap-1">
+                        <span class="counter-value" data-target="2">0</span>
+                        <span class="text-neonEmerald">x</span>
+                        <span class="text-lg font-sans font-semibold text-gray-300 ml-1">Mais Rápido</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Presets proprietários + automação para entregas em 24h-48h.</p>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full mt-4 overflow-hidden">
+                        <div class="scroll-progress-bar h-full bg-gradient-to-r from-neonEmerald to-neonPurple rounded-full transition-all duration-1000 w-0" data-width="90%"></div>
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-2xl p-6 reveal">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-mono uppercase tracking-wider text-amber-400 font-semibold">Watch Time Total</span>
+                        <i class="fa-solid fa-fire text-amber-400 text-lg"></i>
+                    </div>
+                    <div class="font-display font-extrabold text-3xl sm:text-4xl text-white flex items-baseline gap-1">
+                        <span class="counter-value" data-target="100">0</span>
+                        <span class="text-amber-400">%</span>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-1">Foco nas métricas que o algoritmo exige: Rewatch, Shares e Saves.</p>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full mt-4 overflow-hidden">
+                        <div class="scroll-progress-bar h-full bg-gradient-to-r from-amber-400 to-neonPurple rounded-full transition-all duration-1000 w-0" data-width="100%"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SEÇÃO DE FEEDBACKS (2 ABAS DE CLIENTES) -->
+    <section id="feedbacks" class="relative py-20 lg:py-28 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-10 reveal">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonPurple/10 border border-neonPurple/30 text-neonPurple font-mono text-xs mb-3">
+                    <i class="fa-solid fa-star"></i>
+                    <span>PROVA SOCIAL • CLIENTES REAIS</span>
+                </div>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+                    O Que Dizem Sobre a <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonPurple via-neonCyan to-neonEmerald">Zeerow Studio</span>
+                </h2>
+                <p class="text-gray-400 mt-4 text-base sm:text-lg">
+                    Resultados reais de quem confiou seus vídeos brutos ao nosso workflow de edição de alta retenção.
+                </p>
+
+                <!-- Botões Seletor de Abas -->
+                <div class="inline-flex flex-wrap items-center justify-center gap-2 p-1.5 mt-7 rounded-2xl bg-[#14070c] border border-white/15 shadow-xl">
+                    <button type="button" onclick="selectFeedbackTab(0)" id="feedbackTabBtn0" class="px-4 py-2.5 rounded-xl font-display font-bold text-xs sm:text-sm transition-all flex items-center gap-2.5 bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] text-white shadow-lg shadow-[#ff0f4b]/30">
+                        <img src="redenextlogo12.png" alt="Redenext.xyz" class="w-5 h-5 rounded-full object-cover ring-1 ring-white">
+                        <span>Aba 01 • Redenext.xyz</span>
+                    </button>
+                    <button type="button" onclick="selectFeedbackTab(1)" id="feedbackTabBtn1" class="px-4 py-2.5 rounded-xl font-display font-bold text-xs sm:text-sm transition-all flex items-center gap-2.5 text-gray-400 hover:text-white bg-white/[0.03] hover:bg-white/[0.08]">
+                        <img src="Formigaolokoprofile.jpg" alt="Cliente 02" class="w-5 h-5 rounded-full object-cover ring-1 ring-white/40">
+                        <span>Aba 02 • Formigão Loko</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Grid com as 2 Abas/Cards de Feedback -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch reveal">
+
+                <!-- ==========================================
+                     EDITAR FEEDBACK 1 AQUI (Redenext.xyz)
+                     ========================================== -->
+                <div id="feedbackCard0" onclick="selectFeedbackTab(0)" class="spotlight-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between border-2 border-neonPurple shadow-2xl shadow-neonPurple/20 cursor-pointer transition-all duration-300">
+                    <div>
+                        <!-- Barra estilo Aba de Projeto -->
+                        <div class="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-white/10">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#ff0f4b]"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#ff5e00]"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#ffaa00]"></span>
+                                <span class="ml-1 font-mono text-xs text-gray-300 font-semibold">FEEDBACK_01 // REDENEXT.XYZ</span>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono text-[10px] font-bold">
+                                ✓ CLIENTE VERIFICADO
+                            </span>
+                        </div>
+
+                        <!-- Perfil + Estrelas -->
+                        <div class="flex items-center justify-between gap-4 mb-6">
+                            <div class="flex items-center gap-3.5">
+                                <img src="redenextlogo12.png" alt="Redenext.xyz" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-[#0096cd] shadow-lg shrink-0">
+                                <div>
+                                    <h3 class="font-display font-extrabold text-xl text-white flex items-center gap-2">
+                                        Redenext.xyz
+                                        <i class="fa-solid fa-circle-check text-[#0096cd] text-sm" title="Verificado"></i>
+                                    </h3>
+                                    <p class="text-xs font-mono text-gray-400">Servidor & Comunidade • Minecraft</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="flex items-center gap-1 text-amber-400 text-sm">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <span class="font-mono text-[11px] text-amber-300 font-bold mt-1">Nota 5.0 / 5.0</span>
+                            </div>
+                        </div>
+
+                        <!-- Texto do Depoimento -->
+                        <div class="p-5 rounded-2xl bg-black/50 border border-white/10 relative mb-6">
+                            <i class="fa-solid fa-quote-left text-2xl text-neonPurple/30 absolute top-3 left-4"></i>
+                            <p class="text-sm sm:text-base text-gray-200 leading-relaxed pl-6 italic">
+                                "Entrega rápida com ótimo custo-benefício! A edição prendeu a atenção do início ao fim, com cortes dinâmicos, legendas no tempo certo e efeitos sonoros que deram outra cara pros vídeos de divulgação."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tags de Destaque do Feedback 1 -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-white/10">
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 rounded-lg bg-neonPurple/15 border border-neonPurple/30 font-mono text-[11px] text-rose-200">⚡ Entrega Rápida</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-neonCyan/15 border border-neonCyan/30 font-mono text-[11px] text-orange-200">💰 Ótimo Custo-Benefício</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-neonEmerald/15 border border-neonEmerald/30 font-mono text-[11px] text-amber-200">🔥 +12 Mil Views</span>
+                        </div>
+                        <a href="#portfolio" onclick="event.stopPropagation(); playUISound('click')" class="text-xs font-mono font-bold text-neonCyan hover:underline">
+                            Ver vídeo editado →
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ==========================================
+                     EDITAR FEEDBACK 2 AQUI (Segundo Cliente)
+                     ========================================== -->
+                <div id="feedbackCard1" onclick="selectFeedbackTab(1)" class="spotlight-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between border border-white/10 opacity-85 hover:opacity-100 cursor-pointer transition-all duration-300">
+                    <div>
+                        <!-- Barra estilo Aba de Projeto -->
+                        <div class="flex items-center justify-between gap-2 pb-4 mb-6 border-b border-white/10">
+                            <div class="flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#ff0f4b]"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#ff5e00]"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-[#ffaa00]"></span>
+                                <span class="ml-1 font-mono text-xs text-gray-300 font-semibold">FEEDBACK_02 // FORMIGÃO LOKO</span>
+                            </div>
+                            <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-mono text-[10px] font-bold">
+                                ✓ CLIENTE VERIFICADO
+                            </span>
+                        </div>
+
+                        <!-- Perfil + Estrelas -->
+                        <div class="flex items-center justify-between gap-4 mb-6">
+                            <div class="flex items-center gap-3.5">
+                                <img src="Formigaolokoprofile.jpg" alt="Formigão Loko" class="w-14 h-14 rounded-2xl object-cover ring-2 ring-[#ff5e00] shadow-lg shrink-0">
+                                <div>
+                                    <h3 class="font-display font-extrabold text-xl text-white flex items-center gap-2">
+                                        Formigão Loko
+                                        <i class="fa-solid fa-circle-check text-neonCyan text-sm" title="Verificado"></i>
+                                    </h3>
+                                    <p class="text-xs font-mono text-gray-400">Criador de Conteúdo & Gameplay</p>
+                                </div>
+                            </div>
+                            <div class="flex flex-col items-end">
+                                <div class="flex items-center gap-1 text-amber-400 text-sm">
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                    <i class="fa-solid fa-star"></i>
+                                </div>
+                                <span class="font-mono text-[11px] text-amber-300 font-bold mt-1">Nota 5.0 / 5.0</span>
+                            </div>
+                        </div>
+
+                        <!-- Texto do Depoimento -->
+                        <div class="p-5 rounded-2xl bg-black/50 border border-white/10 relative mb-6">
+                            <i class="fa-solid fa-quote-left text-2xl text-neonCyan/30 absolute top-3 left-4"></i>
+                            <p class="text-sm sm:text-base text-gray-200 leading-relaxed pl-6 italic">
+                                "Qualidade absurda na edição! O ritmo dos cortes sem silêncio e o sound design deixaram os vídeos muito mais dinâmicos. Comunicação super rápida e entrega sempre dentro do prazo combinado."
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Tags de Destaque do Feedback 2 -->
+                    <div class="flex flex-wrap items-center justify-between gap-2 pt-4 border-t border-white/10">
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 rounded-lg bg-neonPurple/15 border border-neonPurple/30 font-mono text-[11px] text-rose-200">🎬 Cortes Cirúrgicos</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-neonCyan/15 border border-neonCyan/30 font-mono text-[11px] text-orange-200">🔊 Sound Design 3D</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-neonEmerald/15 border border-neonEmerald/30 font-mono text-[11px] text-amber-200">🚀 Alta Retenção</span>
+                        </div>
+                        <a href="#calculadora" onclick="event.stopPropagation(); playUISound('click')" class="text-xs font-mono font-bold text-neonEmerald hover:underline">
+                            Simular pacote →
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- PORTFÓLIO 9:16 -->
+    <section id="portfolio" class="relative py-20 lg:py-28 bg-[#0a0a12]/80 border-t border-white/10 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 reveal">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonCyan/10 border border-neonCyan/30 text-neonCyan font-mono text-xs mb-3">
+                        <i class="fa-solid fa-clapperboard"></i>
+                        <span>VITRINE VERTICAL 9:16 • TIKTOK, REELS & SHORTS</span>
+                    </div>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+                        Demonstração de <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonCyan via-neonPurple to-neonEmerald">Edições 9:16</span>
+                    </h2>
+                    <p class="text-gray-400 mt-2 text-sm sm:text-base max-w-2xl">
+                        Assista aos exemplos abaixo
+                    </p>
+                </div>
+
+                <div class="shrink-0 flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-[#11111d] border border-white/10 text-xs font-mono text-gray-300">
+                    <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>1080x1920 • 60 FPS • Player Nativo</span>
+                </div>
+            </div>
+
+            <div id="portfolioGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                <!-- Injetado dinamicamente via JavaScript -->
+            </div>
+        </div>
+    </section>
+
+    <!-- CALCULADORA / PACOTES -->
+    <section id="calculadora" class="relative py-20 lg:py-28 z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12 reveal">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-neonEmerald/10 border border-neonEmerald/30 text-neonEmerald font-mono text-xs mb-3">
+                    <i class="fa-solid fa-calculator"></i>
+                    <span>PREÇO ACESSÍVEL PARA ESCALAR SEU CANAL</span>
+                </div>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+                    Monte Seu <span class="text-transparent bg-clip-text bg-gradient-to-r from-neonEmerald via-neonCyan to-neonPurple">Pacote de Edição</span>
+                </h2>
+                <p class="text-gray-400 mt-3 text-base sm:text-lg">
+                    A partir de <strong class="text-white">R$ 29 a R$ 35 por vídeo editado</strong> com alta retenção. Escolha um pacote pronto ou deslize a barra para simular na hora:
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-10 reveal">
+                <button onclick="applyPackagePreset('start')" id="presetBtn-start" class="preset-card text-left p-5 rounded-2xl bg-bgCard/90 border border-white/10 hover:border-neonPurple/50 transition flex flex-col justify-between">
+                    <div class="flex items-center justify-between w-full mb-2">
+                        <span class="font-display font-bold text-lg text-white">⚡ Pacote Start</span>
+                        <span class="font-mono text-xs px-2.5 py-1 rounded-full bg-white/10 text-white font-bold">4 Vídeos • R$ 140</span>
+                    </div>
+                    <p class="text-xs text-gray-400">1 vídeo por semana (R$ 35/vídeo). Perfeito para testar a edição no seu canal e validar o formato com baixo investimento.</p>
+                </button>
+
+                <button onclick="applyPackagePreset('creator')" id="presetBtn-creator" class="preset-card text-left p-5 rounded-2xl bg-gradient-to-b from-neonPurple/20 to-bgCard border-2 border-neonPurple shadow-xl shadow-neonPurple/15 transition flex flex-col justify-between relative">
+                    <span class="absolute -top-3 right-4 px-3 py-0.5 rounded-full bg-gradient-to-r from-neonPurple to-neonCyan text-white font-mono font-bold text-[10px] uppercase tracking-wider shadow">
+                        🔥 Mais Escolhido (R$ 32/vídeo)
+                    </span>
+                    <div class="flex items-center justify-between w-full mb-2">
+                        <span class="font-display font-bold text-lg text-white">🚀 Pacote Creator Pro</span>
+                        <span class="font-mono text-xs px-2.5 py-1 rounded-full bg-neonPurple/30 text-purple-200 font-bold">12 Vídeos • R$ 384</span>
+                    </div>
+                    <p class="text-xs text-gray-300">3 vídeos toda semana com desconto progressivo. O ritmo ideal para destravar o algoritmo e crescer rápido.</p>
+                </button>
+
+                <button onclick="applyPackagePreset('scale')" id="presetBtn-scale" class="preset-card text-left p-5 rounded-2xl bg-bgCard/90 border border-white/10 hover:border-neonEmerald/50 transition flex flex-col justify-between">
+                    <div class="flex items-center justify-between w-full mb-2">
+                        <span class="font-display font-bold text-lg text-white">👑 Escala Diária</span>
+                        <span class="font-mono text-xs px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 font-bold">30 Vídeos • R$ 870</span>
+                    </div>
+                    <p class="text-xs text-gray-400">1 vídeo por dia saindo a apenas <strong class="text-emerald-300">R$ 29/vídeo</strong>! Domine o feed do TikTok, Reels e Shorts o mês inteiro.</p>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch reveal">
+                <div class="lg:col-span-7 spotlight-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between gap-5">
+                    <div class="p-5 rounded-2xl bg-white/[0.02] border border-white/10 space-y-4">
+                        <div class="flex flex-col items-center text-center gap-2.5">
+                            <label for="videoCountSlider" class="font-display font-bold text-base sm:text-lg text-white flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-sliders text-neonCyan"></i>
+                                <span>Quantos Shorts/Reels por mês?</span>
+                            </label>
+
+                            <div class="inline-flex items-center gap-3 bg-[#121222] border border-neonPurple/40 px-3 py-1.5 rounded-2xl shadow-lg shadow-neonPurple/10">
+                                <button type="button" onclick="stepVideoSlider(-2)" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-neonPurple/30 border border-white/10 text-gray-300 hover:text-white flex items-center justify-center transition active:scale-90" title="Diminuir 2 vídeos">
+                                    <i class="fa-solid fa-minus text-xs"></i>
+                                </button>
+                                <div class="flex items-baseline gap-1.5 px-2 min-w-[115px] justify-center">
+                                    <span id="sliderCountDisplay" class="font-display font-extrabold text-2xl sm:text-3xl text-white">12</span>
+                                    <span class="text-xs font-mono text-purple-200">vídeos/mês</span>
+                                </div>
+                                <button type="button" onclick="stepVideoSlider(2)" class="w-8 h-8 rounded-xl bg-white/5 hover:bg-neonCyan/30 border border-white/10 text-gray-300 hover:text-white flex items-center justify-center transition active:scale-90" title="Aumentar 2 vídeos">
+                                    <i class="fa-solid fa-plus text-xs"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="px-1 pt-1">
+                            <input id="videoCountSlider" type="range" min="4" max="30" step="2" value="12" oninput="updateCalculator()" class="custom-slider">
+                        </div>
+
+                        <div class="grid grid-cols-3 gap-2 pt-1">
+                            <button type="button" onclick="setSliderValue(6)" id="tierPill-base" class="py-2 px-2 rounded-xl border text-center font-mono text-[11px] transition-all duration-300 bg-white/[0.03] border-white/10 text-gray-400 hover:border-white/25">
+                                <span class="block text-[10px] opacity-80">4 a 10 vídeos</span>
+                                <strong class="text-white" id="labelBasePrice">R$ 35/un</strong>
+                            </button>
+                            <button type="button" onclick="setSliderValue(12)" id="tierPill-mid" class="py-2 px-2 rounded-xl border text-center font-mono text-[11px] transition-all duration-300 bg-neonCyan/15 border-neonCyan/50 text-neonCyan shadow-md shadow-neonCyan/10">
+                                <span class="block text-[10px] opacity-90">12 a 18 vídeos</span>
+                                <strong id="labelMidPrice">R$ 32/un 🔥</strong>
+                            </button>
+                            <button type="button" onclick="setSliderValue(30)" id="tierPill-max" class="py-2 px-2 rounded-xl border text-center font-mono text-[11px] transition-all duration-300 bg-white/[0.03] border-white/10 text-gray-400 hover:border-white/25">
+                                <span class="block text-[10px] opacity-80">20+ vídeos</span>
+                                <strong class="text-neonEmerald" id="labelMaxPrice">R$ 29/un 👑</strong>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-4 sm:p-5 rounded-2xl bg-[#0b0b15] border border-white/10 space-y-3.5 relative overflow-hidden">
+                        <div class="flex flex-wrap items-center justify-between gap-2">
+                            <div class="flex items-center gap-2">
+                                <div class="w-7 h-7 rounded-lg bg-neonPurple/20 border border-neonPurple/40 flex items-center justify-center text-neonPurple text-xs">
+                                    <i class="fa-solid fa-calendar-check"></i>
+                                </div>
+                                <span class="font-display font-bold text-xs sm:text-sm text-white">Simulador de Frequência Semanal</span>
+                            </div>
+                            <span id="weeklyCadenceBadge" class="px-2.5 py-0.5 rounded-full bg-neonCyan/15 border border-neonCyan/40 text-neonCyan font-mono text-[11px] font-bold">
+                                3x por semana • Ritmo Ideal
+                            </span>
+                        </div>
+
+                        <div id="weekDaysGrid" class="grid grid-cols-7 gap-1.5 sm:gap-2 pt-0.5"></div>
+
+                        <div class="space-y-1.5 pt-1">
+                            <div class="flex items-center justify-between text-[11px] font-mono">
+                                <span class="text-gray-400 flex items-center gap-1.5">
+                                    <i class="fa-solid fa-chart-simple text-neonEmerald"></i>
+                                    <span>Impulso de Entrega no Algoritmo:</span>
+                                </span>
+                                <span id="algoScoreText" class="text-neonEmerald font-bold">78% • Alto Alcance Orgânico</span>
+                            </div>
+                            <div class="w-full h-2 rounded-full bg-white/5 overflow-hidden p-0.5 border border-white/10">
+                                <div id="algoScoreBar" class="h-full rounded-full bg-gradient-to-r from-neonPurple via-neonCyan to-neonEmerald transition-all duration-500" style="width: 78%;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5">
+                        <h4 class="font-display font-bold text-sm sm:text-base text-white flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-neonEmerald"></i>
+                            <span>Turbinar Pacote (Opcional):</span>
+                        </h4>
+
+                        <label id="addonExpressCard" class="cursor-pointer p-4 rounded-2xl bg-white/[0.03] hover:bg-amber-500/[0.06] border border-amber-500/30 hover:border-amber-500/60 transition-all duration-300 flex items-start gap-3.5 select-none relative group">
+                            <input type="checkbox" id="addonExpress" onchange="onExpressAddonChange()" class="custom-checkbox-input sr-only">
+                            <div class="custom-checkbox-box relative mt-0.5 w-6 h-6 rounded-lg border-2 border-amber-500/50 bg-[#14070d] flex items-center justify-center shrink-0 group-hover:border-amber-400">
+                                <span class="custom-checkbox-glow absolute inset-0 rounded-lg bg-amber-400 opacity-0 pointer-events-none"></span>
+                                <svg class="custom-check-svg w-3.5 h-3.5 pointer-events-none" viewBox="0 0 14 14" fill="none">
+                                    <path d="M2.5 7.5L5.5 10.5L11.5 3.5" stroke="#080306" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+                                </svg>
+                            </div>
+
+                            <div class="flex-1 min-w-0">
+                                <div class="font-display font-bold text-sm text-white flex items-center justify-between gap-2">
+                                    <span class="flex items-center gap-1.5 flex-wrap">
+                                        <span>⚡ Entrega Expressa 24h</span>
+                                        <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">PRIORIDADE MÁXIMA</span>
+                                    </span>
+                                    <span id="badgePriceExpress" class="text-xs font-mono px-2.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold shrink-0">+R$ 8/vídeo</span>
+                                </div>
+                                <p class="text-xs text-gray-400 mt-1 leading-relaxed">Passe na frente na fila de render para postar cortes de lives, tendências e notícias do mesmo dia.</p>
+                            </div>
+                        </label>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-gradient-to-r from-[#ff0f4b]/[0.08] via-[#ff5e00]/[0.08] to-[#ffaa00]/[0.08] border border-[#ff5e00]/30 space-y-2.5">
+                        <div class="text-xs font-semibold text-amber-200 flex items-center justify-between">
+                            <span class="flex items-center gap-1.5">
+                                <i class="fa-solid fa-circle-check text-amber-400"></i>
+                                <span id="includedTitleLabel">Já incluso em todos os vídeos:</span>
+                            </span>
+                            <span class="font-mono text-[10px] text-amber-300/90">PADRÃO ZEEROW STUDIO</span>
+                        </div>
+                        <div class="flex flex-wrap gap-1.5">
+                            <span class="px-2.5 py-1 rounded-lg bg-black/45 border border-amber-500/25 text-[11px] font-mono text-amber-100">✨ Legendas Dinâmicas</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-black/45 border border-amber-500/25 text-[11px] font-mono text-amber-100">🔊 Sound Design + SFX</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-black/45 border border-amber-500/25 text-[11px] font-mono text-amber-100">⚡ Zooms & B-Roll</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-black/45 border border-amber-500/25 text-[11px] font-mono text-amber-100">🎨 Color & Nitidez</span>
+                            <span class="px-2.5 py-1 rounded-lg bg-black/45 border border-amber-500/25 text-[11px] font-mono text-amber-100">🔄 Revisões Gratuitas</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-5 spotlight-card rounded-3xl p-6 sm:p-8 border-[#ff5e00]/40 bg-gradient-to-b from-[#1c0911] to-[#0c0408] flex flex-col justify-between gap-5">
+                    <div class="border-b border-white/10 pb-4">
+                        <div class="flex items-center justify-between gap-2 mb-2">
+                            <span class="text-xs font-mono uppercase tracking-wider text-neonEmerald font-semibold">Resumo da Proposta</span>
+                            <span id="discountBadge" class="px-2.5 py-0.5 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 font-mono text-[11px] font-bold whitespace-nowrap">
+                                DESCONTO APLICADO
+                            </span>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <img src="zeerowstudio.png" alt="Zeerow Studio" class="w-11 h-11 rounded-2xl object-cover ring-2 ring-[#ff5e00]/60 shadow-lg shrink-0">
+                            <div>
+                                <h3 id="summaryTierName" class="font-display font-extrabold text-2xl sm:text-[26px] text-white tracking-tight leading-tight">
+                                    Pacote Creator Pro 🔥
+                                </h3>
+                                <span class="text-[11px] font-mono text-gray-400">Produção Oficial Zeerow Studio</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-3">
+                        <div class="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10">
+                            <span class="text-[11px] font-mono text-gray-400 block">Tempo Economizado</span>
+                            <span id="hoursSavedDisplay" class="font-display font-extrabold text-2xl text-neonCyan">~36 horas</span>
+                            <span class="text-[11px] text-gray-400 block">livres no seu mês</span>
+                        </div>
+                        <div class="p-3.5 rounded-2xl bg-white/[0.04] border border-white/10">
+                            <span class="text-[11px] font-mono text-gray-400 block">Valor por Vídeo</span>
+                            <span id="pricePerVideoDisplay" class="font-display font-extrabold text-2xl text-neonEmerald">R$ 32</span>
+                            <span class="text-[11px] text-gray-400 block">edição completa</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 sm:p-5 rounded-2xl bg-[#080306] border border-[#ff5e00]/25 flex items-center justify-between shadow-inner">
+                        <div>
+                            <span class="text-xs text-gray-300 font-medium block">Investimento Total do Pacote</span>
+                            <span class="text-[11px] text-amber-400 font-mono">Pix, Cartão ou Combine Semanal</span>
+                        </div>
+                        <div class="text-right">
+                            <span id="totalOldPrice" class="text-xs text-gray-500 line-through font-mono block">R$ 420</span>
+                            <span id="totalPriceDisplay" class="font-display font-extrabold text-3xl sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-white via-amber-100 to-amber-400">R$ 384</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-display font-bold text-white flex items-center gap-1.5">
+                                <i class="fa-solid fa-shield-halved text-neonEmerald"></i>
+                                <span>Garantia & Início Imediato</span>
+                            </span>
+                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-500/15 text-emerald-300 border border-emerald-500/30">
+                                RISCO ZERO
+                            </span>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 text-center font-mono text-[10px]">
+                            <div class="p-2 rounded-xl bg-black/40 border border-white/5">
+                                <span class="text-neonPurple font-bold block">1. CHAT</span>
+                                <span class="text-gray-400">Alinhamento</span>
+                            </div>
+                            <div class="p-2 rounded-xl bg-black/40 border border-white/5">
+                                <span class="text-neonCyan font-bold block">2. DRIVE</span>
+                                <span class="text-gray-400">Envio Brutos</span>
+                            </div>
+                            <div class="p-2 rounded-xl bg-black/40 border border-white/5">
+                                <span class="text-neonEmerald font-bold block">3. PRONTO</span>
+                                <span class="text-gray-400">Entrega 24-48h</span>
+                            </div>
+                        </div>
+                        <p class="text-[11px] text-gray-400 leading-relaxed">
+                            Ao clicar abaixo, sua simulação já vai preenchida automaticamente para iniciarmos seu projeto sem burocracia.
+                        </p>
+                    </div>
+
+                    <div class="space-y-2.5 pt-1">
+                        <button onclick="sendViaWhatsApp()" class="w-full py-4 px-6 rounded-2xl font-display font-bold text-base text-white bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] hover:brightness-110 transition shadow-xl shadow-[#ff0f4b]/25 flex items-center justify-center gap-2.5 active:scale-95">
+                            <i class="fa-brands fa-whatsapp text-xl"></i>
+                            <span>Fechar Pacote no WhatsApp</span>
+                        </button>
+
+                        <button onclick="redirectToDiscord()" class="w-full py-3.5 px-6 rounded-2xl font-display font-semibold text-sm text-white bg-[#5865F2]/20 hover:bg-[#5865F2]/35 border border-[#5865F2]/50 transition flex items-center justify-center gap-2">
+                            <i class="fa-brands fa-discord text-[#5865F2] text-lg"></i>
+                            <span>Chamar Direto no Discord <i class="fa-solid fa-arrow-up-right-from-square text-xs ml-1 text-gray-400"></i></span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROCESSO -->
+    <section id="processo" class="relative py-20 border-t border-white/10 bg-[#0b0408] z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-14 reveal">
+                <span class="font-mono text-xs uppercase tracking-widest text-neonPurple">WORKFLOW SEM BUROCRACIA</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white mt-2">
+                    Como Funciona o Processo de Edição
+                </h2>
+                <p class="text-gray-400 mt-2 text-sm sm:text-base">
+                    Da gravação bruta no seu celular ou PC até o vídeo pronto para viralizar em menos de 48 horas.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="spotlight-card rounded-3xl p-7 reveal">
+                    <div class="w-12 h-12 rounded-2xl bg-neonPurple/20 border border-neonPurple/40 flex items-center justify-center font-mono font-bold text-lg text-neonPurple mb-5">
+                        01
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Envio dos Brutos & Referências</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Você sobe seus vídeos brutos no Google Drive (ou manda o link da sua live/podcast) e alinhamos o estilo visual do seu canal.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-white/10 font-mono text-xs text-neonCyan flex items-center gap-2">
+                        <i class="fa-brands fa-google-drive"></i>
+                        <span>Pasta dedicada + Alinhamento rápido</span>
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-3xl p-7 reveal">
+                    <div class="w-12 h-12 rounded-2xl bg-neonCyan/20 border border-neonCyan/40 flex items-center justify-center font-mono font-bold text-lg text-neonCyan mb-5">
+                        02
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Magia no Premiere</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Corto cada milissegundo de silêncio, crio o Hook de 3 segundos, aplico legendas dinâmicas, B-rolls, correção de cor e camadas de Sound Design.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-white/10 font-mono text-xs text-neonPurple flex items-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Entrega rápida em 24h a 48h</span>
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-3xl p-7 reveal">
+                    <div class="w-12 h-12 rounded-2xl bg-neonEmerald/20 border border-neonEmerald/40 flex items-center justify-center font-mono font-bold text-lg text-neonEmerald mb-5">
+                        03
+                    </div>
+                    <h3 class="font-display font-bold text-xl text-white mb-2">Aprovação Rápida & Postagem Viral</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">
+                        Você recebe o vídeo renderizado em 1080x1920 (60fps) pronto para postar. Precisa de algum ajuste? Faço na hora até ficar 100% do seu gosto.
+                    </p>
+                    <div class="mt-4 pt-4 border-t border-white/10 font-mono text-xs text-neonEmerald flex items-center gap-2">
+                        <i class="fa-solid fa-rocket"></i>
+                        <span>Pronto para TikTok, Reels & Shorts</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq" class="relative py-20 z-10">
+        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center mb-12 reveal">
+                <span class="font-mono text-xs uppercase tracking-widest text-neonCyan">DÚVIDAS FREQUENTES</span>
+                <h2 class="font-display font-extrabold text-3xl sm:text-4xl text-white mt-2">
+                    Perguntas Antes de Contratar
+                </h2>
+            </div>
+
+            <div class="space-y-3.5 reveal" id="faqContainer">
+                <div class="spotlight-card rounded-2xl border border-white/10 overflow-hidden">
+                    <button onclick="toggleFaq(0)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-display font-bold text-base sm:text-lg text-white">
+                        <span>1. Posso testar com 1 vídeo avulso (R$ 35) antes de fechar pacote?</span>
+                        <i id="faqIcon0" class="fa-solid fa-plus text-neonCyan transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent0" class="hidden px-5 pb-5 text-sm text-gray-300 leading-relaxed border-t border-white/5 pt-3">
+                        Com certeza! Podemos fazer <strong>1 Vídeo Piloto por R$ 35</strong> para alinharmos perfeitamente o seu estilo de legenda, identidade visual e ritmo de cortes antes de você fechar um pacote maior.
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-2xl border border-white/10 overflow-hidden">
+                    <button onclick="toggleFaq(1)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-display font-bold text-base sm:text-lg text-white">
+                        <span>2. Qual é o prazo real de entrega de cada Short/Reel?</span>
+                        <i id="faqIcon1" class="fa-solid fa-plus text-neonCyan transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent1" class="hidden px-5 pb-5 text-sm text-gray-300 leading-relaxed border-t border-white/5 pt-3">
+                        O prazo padrão é de <strong>24h a 48h</strong> após o envio do material bruto. Graças ao meu workflow otimizado no Adobe Premiere Pro com presets autorais, você nunca fica sem vídeo para manter a constância do algoritmo.
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-2xl border border-white/10 overflow-hidden">
+                    <button onclick="toggleFaq(2)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-display font-bold text-base sm:text-lg text-white">
+                        <span>3. E se eu quiser pedir alterações no vídeo entregue?</span>
+                        <i id="faqIcon2" class="fa-solid fa-plus text-neonCyan transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent2" class="hidden px-5 pb-5 text-sm text-gray-300 leading-relaxed border-t border-white/5 pt-3">
+                        Você tem <strong>revisões gratuitas e rápidas</strong>! Se quiser trocar um efeito sonoro, mudar uma frase da legenda ou ajustar um B-roll, faço a alteração no mesmo dia para você postar com 100% de confiança.
+                    </div>
+                </div>
+
+                <div class="spotlight-card rounded-2xl border border-white/10 overflow-hidden">
+                    <button onclick="toggleFaq(3)" class="w-full p-5 text-left flex items-center justify-between gap-4 font-display font-bold text-base sm:text-lg text-white">
+                        <span>4. Tenho uma live ou vídeo longo. Você mesmo acha os melhores cortes?</span>
+                        <i id="faqIcon3" class="fa-solid fa-plus text-neonCyan transition-transform duration-300"></i>
+                    </button>
+                    <div id="faqContent3" class="hidden px-5 pb-5 text-sm text-gray-300 leading-relaxed border-t border-white/5 pt-3">
+                        Sim! Posso tanto editar gravações curtas já roteirizadas quanto <strong>garimpar os momentos mais virais</strong> das suas lives, gameplays, vlogs ou podcasts longos.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="relative pt-16 pb-14 border-t border-white/10 bg-[#060204] z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="spotlight-card rounded-3xl p-8 sm:p-12 mb-14 bg-gradient-to-r from-[#240813] via-[#1a090d] to-[#261205] border border-[#ff5e00]/40 text-center relative overflow-hidden">
+                <div class="max-w-2xl mx-auto space-y-5 relative z-10 flex flex-col items-center">
+                    <div class="relative group">
+                        <div class="absolute -inset-1.5 rounded-3xl bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] blur-md opacity-75 group-hover:opacity-100 transition"></div>
+                        <img src="zeerowstudio.png" alt="Zeerow Studio" class="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl object-cover border-2 border-white/20 shadow-2xl">
+                    </div>
+
+                    <span class="px-3.5 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 font-mono text-xs font-bold">
+                        🔥 ZEEROW STUDIO • VAGAS ABERTAS A PARTIR DE R$ 29 A R$ 35/VÍDEO
+                    </span>
+                    <h2 class="font-display font-extrabold text-3xl sm:text-5xl text-white tracking-tight">
+                        Pronto Para Multiplicar a Retenção dos Seus Vídeos?
+                    </h2>
+                    <p class="text-gray-300 text-base sm:text-lg">
+                        Pare de perder visualizações por causa de edições lentas. Chame a <strong class="text-white">Zeerow Studio</strong> agora no WhatsApp ou Discord e vamos editar seu próximo vídeo viral!
+                    </p>
+                    <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+                        <button onclick="openContactModal('Footer CTA')" class="px-8 py-4 rounded-2xl font-display font-bold text-base text-white bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] hover:brightness-110 transition shadow-2xl shadow-[#ff0f4b]/40 flex items-center gap-2.5">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Solicitar Orçamento / Teste Agora</span>
+                        </button>
+                        <button onclick="redirectToDiscord()" class="px-6 py-4 rounded-2xl font-mono font-semibold text-sm text-gray-200 bg-white/5 hover:bg-white/10 border border-white/15 transition flex items-center gap-2.5">
+                            <i class="fa-brands fa-discord text-[#5865F2] text-lg"></i>
+                            <span id="footerDiscordText">Abrir Discord</span>
+                            <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500 border-t border-white/10 pt-8">
+                <div class="flex items-center gap-3">
+                    <img src="Logo 3@5x.png" alt="Zeerow Studio" class="w-auto object-contain logo-screen-blend mr-6" style="height: 48px; width: auto; transform: scale(1.55); transform-origin: left center;">
+                    <span>•</span>
+                    <span>Estúdio de Edição Short-Form de Alta Retenção (TikTok, Reels & Shorts)</span>
+                </div>
+                <div class="flex items-center gap-5 font-mono">
+                    <button onclick="openContactModal('WhatsApp')" class="hover:text-neonEmerald transition">WhatsApp</button>
+                    <button onclick="redirectToDiscord()" class="hover:text-neonPurple transition flex items-center gap-1">Discord <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i></button>
+                    <a href="#hero" class="hover:text-neonCyan transition">Voltar ao Topo ↑</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODAL 1 -->
+    <div id="portfolioModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="spotlight-card w-full max-w-3xl rounded-3xl border border-white/20 bg-[#0d0d17] overflow-hidden shadow-2xl animate-fadeIn">
+            <div class="px-6 py-4 bg-[#131322] border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-2.5">
+                    <span id="modalCategoryBadge" class="px-2.5 py-0.5 rounded-full bg-neonPurple/20 text-neonPurple font-mono text-xs font-bold">PROJETO 9:16</span>
+                    <h3 id="modalProjectTitle" class="font-display font-bold text-lg text-white">Detalhes do Projeto</h3>
+                </div>
+                <button onclick="closePortfolioModal()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-12 gap-6 items-center">
+                <div class="md:col-span-5 flex flex-col items-center">
+                    <div id="modalPreviewBox" class="w-full max-w-[230px] aspect-[9/16] rounded-2xl overflow-hidden flex flex-col justify-between relative border border-white/20 shadow-xl bg-black"></div>
+                </div>
+
+                <div class="md:col-span-7 space-y-4">
+                    <div class="flex flex-wrap gap-2" id="modalMetricsBadges"></div>
+                    <div class="p-4 rounded-2xl bg-white/[0.03] border border-white/10">
+                        <span class="text-xs font-mono text-red-400 font-bold uppercase block mb-1">1. O Vídeo Bruto (Antes)</span>
+                        <p id="modalChallengeText" class="text-xs sm:text-sm text-gray-300 leading-relaxed"></p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-neonPurple/[0.08] border border-neonPurple/30">
+                        <span class="text-xs font-mono text-neonCyan font-bold uppercase block mb-1">2. Edição & Técnicas Aplicadas</span>
+                        <p id="modalSolutionText" class="text-xs sm:text-sm text-gray-200 leading-relaxed"></p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-emerald-500/[0.08] border border-emerald-500/30">
+                        <span class="text-xs font-mono text-emerald-400 font-bold uppercase block mb-1">3. Resultado Alcançado</span>
+                        <p id="modalResultText" class="text-xs sm:text-sm text-emerald-200 font-medium leading-relaxed"></p>
+                    </div>
+                    <div class="pt-2 flex items-center gap-3">
+                        <button onclick="closePortfolioModal(); scrollToSection('calculadora');" class="flex-1 py-3 px-4 rounded-xl bg-gradient-to-r from-neonPurple to-neonCyan text-white font-display font-bold text-xs sm:text-sm text-center hover:brightness-110 transition">
+                            Quero Esse Estilo no Meu Canal
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL 2 -->
+    <div id="contactModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="spotlight-card w-full max-w-lg rounded-3xl border border-white/20 bg-[#12060b] overflow-hidden shadow-2xl">
+            <div class="px-6 py-4 bg-[#1c0911] border-b border-white/10 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <img src="Logo 3@5x.png" alt="Zeerow Studio" class="w-auto object-contain logo-screen-blend mr-5" style="height: 44px; width: auto; transform: scale(1.5); transform-origin: left center;">
+                    <span class="text-xs font-mono text-amber-300 border-l border-white/15 pl-3">Atendimento Rápido</span>
+                </div>
+                <button onclick="closeContactModal()" class="w-8 h-8 rounded-lg bg-white/5 hover:bg-white/15 text-gray-400 hover:text-white flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <div class="p-6 space-y-5">
+                <p class="text-sm text-gray-300">
+                    Escolha seu canal favorito para conversar diretamente comigo ou envie um briefing rápido abaixo:
+                </p>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <button onclick="sendViaWhatsApp()" class="p-4 rounded-2xl bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 flex items-center gap-3 text-left transition group">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500 text-black flex items-center justify-center text-xl shrink-0">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <div>
+                            <div class="font-display font-bold text-sm text-white group-hover:text-emerald-300">WhatsApp Direto</div>
+                            <div class="text-[11px] text-emerald-400 font-mono">Resposta rápida</div>
+                        </div>
+                    </button>
+
+                    <button onclick="redirectToDiscord()" class="p-4 rounded-2xl bg-[#5865F2]/15 hover:bg-[#5865F2]/25 border border-[#5865F2]/40 flex items-center gap-3 text-left transition group">
+                        <div class="w-10 h-10 rounded-xl bg-[#5865F2] text-white flex items-center justify-center text-lg shrink-0">
+                            <i class="fa-brands fa-discord"></i>
+                        </div>
+                        <div>
+                            <div class="font-display font-bold text-sm text-white group-hover:text-indigo-300 flex items-center gap-1.5">
+                                <span>Abrir Discord</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[10px] text-indigo-400"></i>
+                            </div>
+                            <div id="modalDiscordLabel" class="text-[11px] text-indigo-300 font-mono">zeerow Studio</div>
+                        </div>
+                    </button>
+                </div>
+
+                <form onsubmit="submitQuickBriefing(event)" class="space-y-3 pt-3 border-t border-white/10">
+                    <div>
+                        <label class="text-xs font-mono text-gray-400 block mb-1">Seu Nome ou @Canal</label>
+                        <input type="text" id="briefName" required placeholder="Ex: @meucanal / Lucas" class="w-full px-3.5 py-2.5 rounded-xl bg-black/50 border border-white/15 text-sm text-white focus:border-neonCyan focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="text-xs font-mono text-gray-400 block mb-1">Nicho & Objetivo Principal</label>
+                        <select id="briefNiche" class="w-full px-3.5 py-2.5 rounded-xl bg-[#0b0b14] border border-white/15 text-sm text-white focus:border-neonCyan focus:outline-none">
+                            <option value="Criador de Conteúdo / Cortes">🎙️ Criador de Conteúdo / Cortes de Podcast</option>
+                            <option value="Gaming / Lives / Alta Energia">🎮 Gaming / Lives / Alta Energia</option>
+                            <option value="Infoproduto / Negócios / VSL">💼 Infoproduto / Negócios / Anúncios</option>
+                            <option value="Outro Nicho">🚀 Outro Nicho</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full py-3.5 rounded-xl bg-gradient-to-r from-neonPurple to-neonCyan text-white font-display font-bold text-sm hover:brightness-110 transition shadow-lg">
+                        Gerar Briefing & Abrir WhatsApp <i class="fa-solid fa-arrow-up-right-from-square ml-1"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div id="toastNotification" class="fixed bottom-5 right-5 z-50 pointer-events-none opacity-0 translate-y-4 transition-all duration-300 max-w-sm">
+        <div class="px-4 py-3 rounded-2xl bg-[#141424]/95 backdrop-blur-xl border border-neonCyan/50 shadow-2xl flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-neonCyan/20 text-neonCyan flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-check"></i>
+            </div>
+            <p id="toastMessage" class="text-xs sm:text-sm font-medium text-white"></p>
+        </div>
+    </div>
+
+    <script>
+        const CONFIG_GERAL = {
+            WHATSAPP_NUMERO: "5554991929261",
+            DISCORD_URL: "https://discord.gg/sRrkmQfC3R",
+            DISCORD_USER: "zeerow studio",
+
+            PRECO_BASE_POR_VIDEO: 40,
+            PRECO_DESCONTO_12_MAIS: 38,
+            PRECO_DESCONTO_20_MAIS: 35,
+
+            PRECO_ENTREGA_EXPRESSA: 8,
+            EXTRA_EXPRESS_24H: 8,
+
+            MEUS_VIDEOS: [
+                {
+                    id: 1,
+                    titulo: "Frase chamativa, o segredo da retenção",
+                    subtitulo: "🎮 Server/Minecraft",
+                    views: "12 Mil Views",
+                    urlVideo: "https://www.youtube.com/shorts/JlHpvPAeJys", // <--- Mantém o link do YouTube Shorts
+                    legendaDemo: '"Sabe aquele amigo que joga no celular?..." 📱',
+                    icone: "fa-microphone-lines",
+                    gradiente: "from-purple-900 via-indigo-950 to-black",
+                    corDestaque: "text-neonPurple",
+                    tags: ["Legenda Dinâmica", "Sound Design", "Zoom Punch"],
+                    desafio: "Episódio bruto de 20 minutos com câmera parada e pausas longas que derrubavam a retenção nos primeiros segundos.",
+                    solucao: "Recortei a frase mais polêmica para abrir o vídeo (0-3s), apliquei B-roll cinematográfico, legendas palavra por palavra e efeitos sonoros.",
+                    resultado: "Mais de 12 Mil visualizações orgânicas no Reels e TikTok em um dia!."
+                },
+                {
+                    id: 2,
+                    titulo: "Em desenvolvimento...",
+                    subtitulo: "desenvolvimento...",
+                    views: "0",
+                    urlVideo: "",
+                    legendaDemo: 'EM BREVE...',
+                    icone: "fa-gear",
+                    gradiente: "from-cyan-900 via-slate-950 to-black",
+                    corDestaque: "text-neonCyan",
+                    tags: ["Sem informações"],
+                    desafio: "Sem informações",
+                    solucao: "Sem informações",
+                    resultado: "Sem informações"
+                },
+                {
+                    id: 3,
+                    titulo: "Em desenvolvimento...",
+                    subtitulo: "desenvolvimento...",
+                    views: "0",
+                    urlVideo: "",
+                    legendaDemo: 'EM BREVE...',
+                    icone: "fa-gear",
+                    gradiente: "from-cyan-900 via-slate-950 to-black",
+                    corDestaque: "text-neonCyan",
+                    tags: ["Sem informações"],
+                    desafio: "Sem informações",
+                    solucao: "Sem informações",
+                    resultado: "Sem informações"
+                },
+                {
+                    id: 4,
+                    titulo: "Em desenvolvimento...",
+                    subtitulo: "desenvolvimento...",
+                    views: "0",
+                    urlVideo: "",
+                    legendaDemo: 'EM BREVE...',
+                    icone: "fa-gear",
+                    gradiente: "from-cyan-900 via-slate-950 to-black",
+                    corDestaque: "text-neonCyan",
+                    tags: ["Sem informações"],
+                    desafio: "Sem informações",
+                    solucao: "Sem informações",
+                    resultado: "Sem informações"
+                }
+            ]
+        };
+
+        let sfxEnabled = true;
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                const AudioContext = window.AudioContext || window.webkitAudioContext;
+                if (AudioContext) audioCtx = new AudioContext();
+            }
+            if (audioCtx && audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+        }
+
+        function toggleUISound() {
+            sfxEnabled = !sfxEnabled;
+            const icon = document.getElementById('sfxIcon');
+            const label = document.getElementById('sfxLabel');
+            if (sfxEnabled) {
+                icon.className = 'fa-solid fa-volume-high text-neonCyan';
+                label.textContent = 'SFX ON';
+                playUISound('pop');
+                showToast('🔊 Efeitos sonoros da timeline ativados!');
+            } else {
+                icon.className = 'fa-solid fa-volume-xmark text-gray-500';
+                label.textContent = 'SFX OFF';
+                playUISound('click');
+                showToast('🔇 Efeitos sonoros silenciados.');
+            }
+        }
+
+        function playUISound(type) {
+            if (!sfxEnabled) return;
+            try {
+                initAudio();
+                if (!audioCtx) return;
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+
+                if (type === 'click' || type === 'pop') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(520, now);
+                    osc.frequency.exponentialRampToValueAtTime(880, now + 0.065);
+                    gain.gain.setValueAtTime(0.08, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.07);
+                    osc.start(now);
+                    osc.stop(now + 0.07);
+                } else if (type === 'whoosh') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(140, now);
+                    osc.frequency.exponentialRampToValueAtTime(620, now + 0.14);
+                    gain.gain.setValueAtTime(0.11, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.25);
+                    osc.start(now);
+                    osc.stop(now + 0.25);
+                } else if (type === 'bass') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(130, now);
+                    osc.frequency.exponentialRampToValueAtTime(38, now + 0.32);
+                    gain.gain.setValueAtTime(0.18, now);
+                    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.34);
+                    osc.start(now);
+                    osc.stop(now + 0.34);
+                }
+            } catch (e) {}
+        }
+
+        document.addEventListener('mousemove', (e) => {
+            const cards = document.querySelectorAll('.spotlight-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            });
+        });
+
+function updateTimelineOnScroll() {
+            // Mapeamento das seções e suas posições visuais na barra (0%, 25%, 50%, 75%, 100%)
+            const sections = [
+                { id: 'hero', pos: -10 },
+                { id: 'feedbacks', pos: 20.6 },
+                { id: 'portfolio', pos: 40.8 },
+                { id: 'calculadora', pos: 60 },
+                { id: 'processo', pos: 80 }
+            ];
+
+            const scrollY = window.scrollY + window.innerHeight / 2.5; // Offset para ativar quando chegar no meio
+            let currentPercent = 1;
+
+            for (let i = 0; i < sections.length; i++) {
+                const sec = document.getElementById(sections[i].id);
+                if (!sec) continue;
+
+                const nextSec = sections[i + 1] ? document.getElementById(sections[i + 1].id) : null;
+                const secTop = sec.offsetTop;
+                const nextTop = nextSec ? nextSec.offsetTop : document.body.scrollHeight;
+
+                if (scrollY >= secTop && scrollY < nextTop) {
+                    const sectionHeight = nextTop - secTop;
+                    const progressInSection = (scrollY - secTop) / sectionHeight;
+                    const startPos = sections[i].pos;
+                    const endPos = sections[i + 1] ? sections[i + 1].pos : 100;
+                    
+                    currentPercent = startPos + (progressInSection * (endPos - startPos));
+                    break;
+                } else if (i === sections.length - 1 && scrollY >= secTop) {
+                    currentPercent = 100;
+                }
+            }
+
+            // Garante limites visuais
+            currentPercent = Math.max(1.5, Math.min(100, currentPercent));
+
+            // Atualiza UI
+            const progressFill = document.getElementById('timelineProgressFill');
+            const playhead = document.getElementById('timelinePlayhead');
+            if (progressFill && playhead) {
+                progressFill.style.width = `${currentPercent}%`;
+                playhead.style.left = `${currentPercent}%`;
+            }
+
+            // Timecode
+            const totalFrames = Math.floor((currentPercent / 100) * (59 * 60 + 59));
+            const seconds = Math.floor(totalFrames / 60);
+            const frames = totalFrames % 60;
+            const secStr = String(seconds).padStart(2, '0');
+            const frameStr = String(frames).padStart(2, '0');
+
+            const tcElement = document.getElementById('headerTimecode');
+            if (tcElement) {
+                tcElement.textContent = `00:00:${secStr}:${frameStr}`;
+            }
+
+            // Atualiza botões ignorando o data-progress solto
+            const keyframeBtns = document.querySelectorAll('.keyframe-btn');
+            keyframeBtns.forEach((btn, index) => {
+                if (currentPercent >= sections[index].pos - 5) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', updateTimelineOnScroll, { passive: true });
+
+        function scrollToSection(id) {
+            playUISound('click');
+            const el = document.getElementById(id);
+            if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Alternância das Abas de Feedback
+        function selectFeedbackTab(index) {
+            playUISound('click');
+            const btn0 = document.getElementById('feedbackTabBtn0');
+            const btn1 = document.getElementById('feedbackTabBtn1');
+            const card0 = document.getElementById('feedbackCard0');
+            const card1 = document.getElementById('feedbackCard1');
+
+            const activeBtnClass = 'px-4 py-2.5 rounded-xl font-display font-bold text-xs sm:text-sm transition-all flex items-center gap-2.5 bg-gradient-to-r from-[#ff0f4b] via-[#ff5e00] to-[#ffaa00] text-white shadow-lg shadow-[#ff0f4b]/30';
+            const inactiveBtnClass = 'px-4 py-2.5 rounded-xl font-display font-bold text-xs sm:text-sm transition-all flex items-center gap-2.5 text-gray-400 hover:text-white bg-white/[0.03] hover:bg-white/[0.08]';
+
+            const activeCardClass = 'spotlight-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between border-2 border-neonPurple shadow-2xl shadow-neonPurple/20 cursor-pointer transition-all duration-300 scale-[1.01]';
+            const inactiveCardClass = 'spotlight-card rounded-3xl p-6 sm:p-8 flex flex-col justify-between border border-white/10 opacity-80 hover:opacity-100 cursor-pointer transition-all duration-300';
+
+            if (index === 0) {
+                if (btn0) btn0.className = activeBtnClass;
+                if (btn1) btn1.className = inactiveBtnClass;
+                if (card0) card0.className = activeCardClass;
+                if (card1) card1.className = inactiveCardClass;
+            } else {
+                if (btn1) btn1.className = activeBtnClass;
+                if (btn0) btn0.className = inactiveBtnClass;
+                if (card1) card1.className = activeCardClass;
+                if (card0) card0.className = inactiveCardClass;
+            }
+        }
+
+        let currentPhoneMode = 'edited';
+        const editedCaptions = [
+            'SEU VÍDEO PRECISA PRENDER NOS <span class="text-amber-300 underline decoration-neonPurple decoration-4">3 SEGUNDOS!</span> 🚀',
+            'CORTES RÁPIDOS = <span class="text-neonCyan">ZERO TÉDIO</span> NO CÉREBRO ⚡',
+            'SOUND DESIGN EM CAMADAS <span class="text-neonEmerald">MULTIPLICA</span> AS VIEWS! 🔊',
+            'LEGENDAS DINÂMICAS RETÊM <span class="text-amber-300">84% MAIS</span> NO MUDO 🔥'
+        ];
+        let captionIndex = 0;
+
+        setInterval(() => {
+            if (currentPhoneMode !== 'edited') return;
+            captionIndex = (captionIndex + 1) % editedCaptions.length;
+            const capEl = document.getElementById('dynamicCaptionText');
+            if (capEl) {
+                capEl.classList.remove('caption-pop');
+                void capEl.offsetWidth;
+                capEl.innerHTML = editedCaptions[captionIndex];
+                capEl.classList.add('caption-pop');
+            }
+            const tcPhone = document.getElementById('phoneFrameCounter');
+            if (tcPhone) {
+                const randFrame = String(Math.floor(Math.random() * 59)).padStart(2, '0');
+                tcPhone.textContent = `TC 00:0${captionIndex + 1}:${randFrame}`;
+            }
+        }, 2400);
+
+        function setPhoneEditMode(mode) {
+            currentPhoneMode = mode;
+            const btnRaw = document.getElementById('btnModeRaw');
+            const btnEdited = document.getElementById('btnModeEdited');
+            const videoBg = document.getElementById('phoneVideoBg');
+            const brollBadge = document.getElementById('brollFloatingBadge');
+            const sticker = document.getElementById('phoneSticker');
+            const retentionPill = document.getElementById('retentionLivePill');
+            const retentionValueText = document.getElementById('retentionValueText');
+            const captionContainer = document.getElementById('captionContainer');
+            const dynamicCaptionText = document.getElementById('dynamicCaptionText');
+            const sfxTag = document.getElementById('sfxTagDisplay');
+            const creatorFaceIcon = document.getElementById('creatorFaceIcon');
+            const creatorActionLabel = document.getElementById('creatorActionLabel');
+            const waveformBars = document.getElementById('waveformBars');
+
+            if (mode === 'raw') {
+                playUISound('click');
+                btnRaw.className = 'px-4 py-2 rounded-xl text-xs font-display font-bold transition flex items-center gap-1.5 bg-red-500/25 border border-red-500/50 text-red-200';
+                btnEdited.className = 'px-3.5 py-2 rounded-xl text-xs font-display font-bold transition flex items-center gap-1.5 text-gray-400 hover:text-white';
+                videoBg.classList.remove('animate-zoom-punch');
+                videoBg.style.filter = 'grayscale(85%) brightness(0.7)';
+                brollBadge.classList.add('opacity-0');
+                sticker.classList.add('hidden');
+                retentionPill.className = 'px-2.5 py-1 rounded-lg bg-red-500/20 border border-red-400/40 backdrop-blur-md flex items-center gap-1.5';
+                retentionValueText.className = 'font-mono text-[11px] font-bold text-red-300';
+                retentionValueText.textContent = 'RETENÇÃO: 19% (CAINDO ⚠️)';
+                captionContainer.className = 'inline-block px-3 py-1.5 rounded-lg bg-black/40 border border-white/5';
+                dynamicCaptionText.className = 'font-sans font-normal text-xs text-gray-400';
+                dynamicCaptionText.innerHTML = '"Hum... é... hoje eu queria falar sobre..." (Silêncio de 4s 😴)';
+                sfxTag.textContent = 'ÁUDIO BRUTO: BAIXO & SEM SFX';
+                sfxTag.className = 'font-mono text-[10px] text-gray-500';
+                creatorFaceIcon.className = 'fa-regular fa-face-meh text-4xl text-gray-500 mb-1';
+                creatorActionLabel.textContent = 'CÂMERA PARADA';
+                waveformBars.classList.add('opacity-20');
+                showToast('😴 Modo Bruto: Veja como a falta de ritmo derruba a retenção.');
+            } else {
+                playUISound('whoosh');
+                btnEdited.className = 'px-4 py-2 rounded-xl text-xs font-display font-bold transition flex items-center gap-1.5 bg-gradient-to-r from-neonPurple to-neonCyan text-white shadow-lg shadow-neonPurple/30';
+                btnRaw.className = 'px-3.5 py-2 rounded-xl text-xs font-display font-bold transition flex items-center gap-1.5 text-gray-400 hover:text-white';
+                videoBg.classList.add('animate-zoom-punch');
+                videoBg.style.filter = 'none';
+                brollBadge.classList.remove('opacity-0');
+                sticker.classList.remove('hidden');
+                retentionValueText.className = 'font-mono text-[11px] font-bold text-emerald-300';
+                retentionValueText.textContent = 'RETENÇÃO: 92%';
+                captionContainer.className = 'inline-block px-3.5 py-2 rounded-2xl bg-black/75 border border-white/15 backdrop-blur-md shadow-2xl';
+                dynamicCaptionText.className = 'font-display font-extrabold text-lg leading-tight uppercase tracking-wide text-white caption-pop';
+                dynamicCaptionText.innerHTML = editedCaptions[0];
+                sfxTag.textContent = 'SFX: WHOOSH + SUB DROP';
+                sfxTag.className = 'font-mono text-[10px] font-bold text-neonCyan';
+                creatorFaceIcon.className = 'fa-solid fa-bolt-lightning text-4xl text-neonCyan mb-1';
+                creatorActionLabel.textContent = 'ZOOM PUNCH 115%';
+                waveformBars.classList.remove('opacity-20');
+                showToast('🔥 Modo Editado Ativo: Pacing rápido, legendas pop-in e Sound Design!');
+            }
+        }
+
+        function triggerPhoneEffect(effectType) {
+            if (currentPhoneMode === 'raw') setPhoneEditMode('edited');
+            const avatarFrame = document.getElementById('creatorAvatarFrame');
+            const brollBadgeText = document.getElementById('brollBadgeText');
+            const sfxTag = document.getElementById('sfxTagDisplay');
+
+            if (effectType === 'zoom') {
+                playUISound('whoosh');
+                avatarFrame.style.transform = 'scale(1.22) rotate(-3deg)';
+                sfxTag.textContent = 'FX: DYNAMIC ZOOM + CAMERA SHAKE';
+                setTimeout(() => { avatarFrame.style.transform = 'scale(1)'; }, 350);
+            } else if (effectType === 'sfx') {
+                playUISound('bass');
+                sfxTag.textContent = '🔊 SFX: SUB BASS DROP + RISER!';
+                avatarFrame.classList.add('ring-4', 'ring-neonCyan');
+                setTimeout(() => { avatarFrame.classList.remove('ring-4', 'ring-neonCyan'); }, 450);
+            } else if (effectType === 'broll') {
+                playUISound('pop');
+                brollBadgeText.textContent = '🎬 OVERLAY 4K + MOTION CHART 📈';
+                sfxTag.textContent = 'TRACK V3: B-ROLL + CASH SFX 💰';
+                setTimeout(() => { brollBadgeText.textContent = 'B-ROLL + SFX: CASH IN 💰'; }, 1400);
+            }
+        }
+
+        function getYouTubeEmbedUrl(url) {
+            if (!url) return null;
+            const shortsMatch = url.match(/(?:youtube\.com\/shorts\/|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+            if (shortsMatch && shortsMatch[1]) {
+                return `https://www.youtube.com/embed/${shortsMatch[1]}?autoplay=1&mute=0&loop=1&playlist=${shortsMatch[1]}`;
+            }
+            return null;
+        }
+
+        // FUNÇÃO DE RENDERIZAÇÃO ATUALIZADA COM THUMB DO YOUTUBE
+        function renderPortfolio() {
+            const grid = document.getElementById('portfolioGrid');
+            const videos = CONFIG_GERAL.MEUS_VIDEOS;
+
+            grid.innerHTML = videos.map((item, idx) => {
+                const hasRealUrl = item.urlVideo && item.urlVideo.trim() !== '';
+                let ytThumbUrl = '';
+                
+                if (hasRealUrl) {
+                    const matchId = item.urlVideo.match(/(?:youtube\.com\/shorts\/|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/);
+                    if (matchId && matchId[1]) {
+                        ytThumbUrl = `https://img.youtube.com/vi/${matchId[1]}/hqdefault.jpg`;
+                    }
+                }
+
+                let mediaContentHtml = '';
+
+                if (hasRealUrl && ytThumbUrl) {
+                    mediaContentHtml = `
+                        <div class="absolute inset-0 bg-cover bg-center opacity-65" style="background-image: url('${ytThumbUrl}')"></div>
+                        <div class="absolute inset-0 bg-black/45"></div>
+
+                        <div class="relative z-10 flex items-center justify-between gap-1.5">
+                            <span class="px-2 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/15 font-mono text-[11px] font-bold text-white flex items-center gap-1">
+                                <i class="fa-solid fa-play text-neonCyan text-[9px]"></i> ${item.views}
+                            </span>
+                        </div>
+
+                        <div onclick="openPortfolioModal(${item.id})" class="relative z-10 my-auto flex flex-col items-center text-center px-1 cursor-pointer">
+                            <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-2xl ${item.corDestaque} mb-3 group-hover:scale-110 group-hover:bg-neonPurple group-hover:text-white transition-all duration-300 shadow-xl">
+                                <i class="fa-solid fa-play"></i>
+                            </div>
+                            <div class="px-2.5 py-2 rounded-xl bg-black/80 border border-white/15 shadow-lg">
+                                <p class="font-display font-extrabold text-xs text-white uppercase tracking-wide leading-snug">
+                                    ${item.legendaDemo}
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="relative z-10 space-y-1.5">
+                            <button onclick="openPortfolioModal(${item.id})" class="w-full flex items-center justify-between px-3 py-1.5 rounded-xl bg-black/65 hover:bg-black/80 backdrop-blur-md border border-white/10 text-[11px] font-mono text-gray-300 transition">
+                                <span>${item.subtitulo}</span>
+                                <span class="text-neonPurple font-bold">Detalhes →</span>
+                            </button>
+                        </div>
+                    `;
+                } else if (hasRealUrl) {
+                    mediaContentHtml = `
+                        <video id="portfolioVideo-${item.id}" src="${item.urlVideo}" class="absolute inset-0 w-full h-full object-cover z-10 cursor-pointer" loop playsinline muted autoplay onclick="toggleCardVideoPlay(event, ${item.id})"></video>
+                        <div class="relative z-20 flex items-center justify-between gap-1.5">
+                            <span class="px-2 py-1 rounded-lg bg-black/75 backdrop-blur-md border border-white/15 font-mono text-[11px] font-bold text-white flex items-center gap-1">
+                                <i class="fa-solid fa-play text-neonCyan text-[9px]"></i> ${item.views}
+                            </span>
+                            <button onclick="toggleCardVideoMute(event, ${item.id})" id="muteBtn-${item.id}" class="px-2.5 py-1 rounded-lg bg-neonPurple/90 hover:bg-neonPurple text-white font-mono text-[10px] font-bold shadow-lg flex items-center gap-1 transition">
+                                <i class="fa-solid fa-volume-xmark"></i> Ativar Som
+                            </button>
+                        </div>
+                        <div class="relative z-20 mt-auto flex items-center justify-between gap-2 pt-2">
+                            <label onclick="event.stopPropagation()" class="cursor-pointer px-2.5 py-1.5 rounded-xl bg-black/80 hover:bg-black border border-white/20 text-[10px] font-mono text-neonCyan flex items-center gap-1 transition">
+                                <i class="fa-solid fa-folder-open"></i> Trocar .MP4
+                                <input type="file" accept="video/mp4,video/webm,video/*" class="hidden" onchange="loadLocalVideoToSlot(event, ${idx})">
+                            </label>
+                            <button onclick="openPortfolioModal(${item.id})" class="px-2.5 py-1.5 rounded-xl bg-white/15 hover:bg-white/25 backdrop-blur-md text-[10px] font-display font-bold text-white transition">
+                                Expandir ⤢
+                            </button>
+                        </div>
+                    `;
+                } else {
+                    mediaContentHtml = `
+                        <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#ffffff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                        <div class="relative z-10 flex items-center justify-between gap-1.5">
+                            <span class="px-2 py-1 rounded-lg bg-black/70 backdrop-blur-md border border-white/15 font-mono text-[11px] font-bold text-white flex items-center gap-1">
+                                <i class="fa-solid fa-play text-neonCyan text-[9px]"></i> ${item.views}
+                            </span>
+                        </div>
+                        <div onclick="openPortfolioModal(${item.id})" class="relative z-10 my-auto flex flex-col items-center text-center px-1 cursor-pointer">
+                            <div class="w-14 h-14 rounded-2xl bg-white/10 border border-white/20 backdrop-blur-md flex items-center justify-center text-2xl ${item.corDestaque} mb-3 group-hover:scale-110 group-hover:bg-neonPurple group-hover:text-white transition-all duration-300 shadow-xl">
+                                <i class="fa-solid ${item.icone}"></i>
+                            </div>
+                            <div class="px-2.5 py-2 rounded-xl bg-black/80 border border-white/15 shadow-lg">
+                                <p class="font-display font-extrabold text-xs text-white uppercase tracking-wide leading-snug">
+                                    ${item.legendaDemo}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="relative z-10 space-y-1.5">
+                            <button onclick="openPortfolioModal(${item.id})" class="w-full flex items-center justify-between px-3 py-1.5 rounded-xl bg-black/65 hover:bg-black/80 backdrop-blur-md border border-white/10 text-[11px] font-mono text-gray-300 transition">
+                                <span>${item.subtitulo}</span>
+                                <span class="text-neonPurple font-bold">Detalhes →</span>
+                            </button>
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="spotlight-card rounded-3xl p-3.5 flex flex-col justify-between group">
+                        <div class="relative w-full aspect-[9/16] rounded-2xl bg-gradient-to-b ${item.gradiente} border border-white/15 overflow-hidden flex flex-col justify-between p-3.5">
+                            ${mediaContentHtml}
+                        </div>
+                        <div class="pt-3.5 px-1 space-y-2">
+                            <h3 onclick="openPortfolioModal(${item.id})" class="font-display font-bold text-base text-white group-hover:text-neonCyan transition cursor-pointer leading-snug">
+                                ${item.titulo}
+                            </h3>
+                            <div class="flex flex-wrap gap-1">
+                                ${item.tags.map(t => `<span class="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/[0.05] border border-white/10 text-gray-300">${t}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function loadLocalVideoToSlot(event, slotIndex) {
+            const file = event.target.files && event.target.files[0];
+            if (!file) return;
+            const blobUrl = URL.createObjectURL(file);
+            CONFIG_GERAL.MEUS_VIDEOS[slotIndex].urlVideo = blobUrl;
+            CONFIG_GERAL.MEUS_VIDEOS[slotIndex].titulo = file.name.replace(/\.[^/.]+$/, "");
+            playUISound('whoosh');
+            renderPortfolio();
+            showToast(`🎬 Vídeo "${file.name}" carregado no Slot #${slotIndex + 1}!`);
+        }
+
+        function toggleCardVideoPlay(event, id) {
+            event.stopPropagation();
+            const vid = document.getElementById(`portfolioVideo-${id}`);
+            if (!vid) return;
+            if (vid.paused) { vid.play(); showToast('▶️ Reproduzindo vídeo'); }
+            else { vid.pause(); showToast('⏸️ Vídeo pausado'); }
+        }
+
+        function toggleCardVideoMute(event, id) {
+            event.stopPropagation();
+            const vid = document.getElementById(`portfolioVideo-${id}`);
+            const btn = document.getElementById(`muteBtn-${id}`);
+            if (!vid || !btn) return;
+            vid.muted = !vid.muted;
+            if (vid.muted) {
+                btn.innerHTML = '<i class="fa-solid fa-volume-xmark"></i> Ativar Som';
+                btn.className = 'px-2.5 py-1 rounded-lg bg-neonPurple/90 hover:bg-neonPurple text-white font-mono text-[10px] font-bold shadow-lg flex items-center gap-1 transition';
+            } else {
+                btn.innerHTML = '<i class="fa-solid fa-volume-high"></i> Som Ligado';
+                btn.className = 'px-2.5 py-1 rounded-lg bg-emerald-500 text-black font-mono text-[10px] font-bold shadow-lg flex items-center gap-1 transition';
+            }
+        }
+
+        function openPortfolioModal(projectId) {
+            playUISound('whoosh');
+            const project = CONFIG_GERAL.MEUS_VIDEOS.find(p => p.id === projectId);
+            if (!project) return;
+
+            document.getElementById('modalCategoryBadge').textContent = project.subtitulo;
+            document.getElementById('modalProjectTitle').textContent = project.titulo;
+            document.getElementById('modalChallengeText').textContent = project.desafio;
+            document.getElementById('modalSolutionText').textContent = project.solucao;
+            document.getElementById('modalResultText').textContent = project.resultado;
+
+            document.getElementById('modalMetricsBadges').innerHTML = `
+                <span class="px-3 py-1 rounded-full bg-neonPurple/20 border border-neonPurple/40 text-purple-200 font-mono text-xs font-bold">${project.views}</span>
+            `;
+
+            const previewBox = document.getElementById('modalPreviewBox');
+            const hasRealUrl = project.urlVideo && project.urlVideo.trim() !== '';
+            const ytEmbed = getYouTubeEmbedUrl(project.urlVideo);
+
+            if (hasRealUrl && ytEmbed) {
+                previewBox.className = 'w-full max-w-[230px] aspect-[9/16] rounded-2xl overflow-hidden relative border border-white/20 shadow-xl bg-black';
+                previewBox.innerHTML = `<iframe src="${ytEmbed}" class="w-full h-full" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+            } else if (hasRealUrl) {
+                previewBox.className = 'w-full max-w-[230px] aspect-[9/16] rounded-2xl overflow-hidden relative border border-white/20 shadow-xl bg-black';
+                previewBox.innerHTML = `<video src="${project.urlVideo}" class="w-full h-full object-cover" controls autoplay loop playsinline></video>`;
+            } else {
+                previewBox.className = `w-full max-w-[230px] aspect-[9/16] rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden border border-white/20 shadow-xl bg-gradient-to-b ${project.gradiente}`;
+                previewBox.innerHTML = `
+                    <div class="text-[10px] font-mono text-emerald-300 bg-black/60 px-2 py-1 rounded self-start">${project.retencao || '9:16'}</div>
+                    <div class="my-auto text-center space-y-3">
+                        <div class="w-14 h-14 mx-auto rounded-2xl bg-white/10 flex items-center justify-center text-2xl ${project.corDestaque}">
+                            <i class="fa-solid ${project.icone}"></i>
+                        </div>
+                        <p class="font-display font-bold text-xs text-white bg-black/80 p-2 rounded-xl border border-white/10">${project.legendaDemo}</p>
+                    </div>
+                    <div class="text-[10px] font-mono text-center text-gray-300 bg-black/60 py-1 rounded">1080x1920 • 60 FPS</div>
+                `;
+            }
+
+            const modal = document.getElementById('portfolioModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closePortfolioModal() {
+            playUISound('click');
+            const modal = document.getElementById('portfolioModal');
+            const previewBox = document.getElementById('modalPreviewBox');
+            if (previewBox) previewBox.innerHTML = '';
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        let currentCalculatedMessage = '';
+
+        function initPricingLabels() {
+            const expressPrice = CONFIG_GERAL.PRECO_ENTREGA_EXPRESSA ?? CONFIG_GERAL.EXTRA_EXPRESS_24H;
+            document.getElementById('labelBasePrice').textContent = `R$ ${CONFIG_GERAL.PRECO_BASE_POR_VIDEO}/un`;
+            document.getElementById('labelMidPrice').textContent = `R$ ${CONFIG_GERAL.PRECO_DESCONTO_12_MAIS}/un 🔥`;
+            document.getElementById('labelMaxPrice').textContent = `R$ ${CONFIG_GERAL.PRECO_DESCONTO_20_MAIS}/un 👑`;
+
+            const badgeExpress = document.getElementById('badgePriceExpress');
+            if (badgeExpress) badgeExpress.textContent = `+R$ ${expressPrice}/vídeo`;
+        }
+
+        function stepVideoSlider(delta) {
+            playUISound('click');
+            const slider = document.getElementById('videoCountSlider');
+            const nextVal = Math.min(30, Math.max(4, parseInt(slider.value, 10) + delta));
+            slider.value = nextVal;
+            updateCalculator();
+        }
+
+        function setSliderValue(val) {
+            playUISound('whoosh');
+            const slider = document.getElementById('videoCountSlider');
+            slider.value = val;
+            updateCalculator();
+        }
+
+        function renderWeeklySimulator(count) {
+            const days = ['SEG', 'TER', 'QUA', 'QUI', 'SEX', 'SÁB', 'DOM'];
+            const activeDaysCount = Math.min(7, Math.max(1, Math.round(count / 4)));
+            const schedulesByCount = { 1: [0], 2: [1, 4], 3: [0, 2, 4], 4: [0, 1, 3, 5], 5: [0, 1, 2, 3, 4], 6: [0, 1, 2, 3, 4, 5], 7: [0, 1, 2, 3, 4, 5, 6] };
+            const activeIndices = schedulesByCount[activeDaysCount] || [0, 2, 4];
+
+            const grid = document.getElementById('weekDaysGrid');
+            if (grid) {
+                grid.innerHTML = days.map((day, idx) => {
+                    const isActive = activeIndices.includes(idx);
+                    if (isActive) {
+                        return `
+                            <div class="py-2 px-1 rounded-xl bg-gradient-to-b from-neonEmerald/20 to-neonCyan/10 border border-neonEmerald/50 flex flex-col items-center justify-center gap-1 shadow-sm shadow-neonEmerald/10 transition-all duration-300">
+                                <span class="font-mono text-[10px] font-bold text-white">${day}</span>
+                                <span class="w-4 h-4 rounded-full bg-neonEmerald text-black flex items-center justify-center text-[9px] font-bold">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                            </div>
+                        `;
+                    }
+                    return `
+                        <div class="py-2 px-1 rounded-xl bg-white/[0.02] border border-white/5 flex flex-col items-center justify-center gap-1 opacity-45 transition-all duration-300">
+                            <span class="font-mono text-[10px] text-gray-500">${day}</span>
+                            <span class="w-4 h-4 rounded-full bg-white/5 flex items-center justify-center text-[8px] text-gray-600">•</span>
+                        </div>
+                    `;
+                }).join('');
+            }
+
+            const cadenceBadge = document.getElementById('weeklyCadenceBadge');
+            const algoScoreText = document.getElementById('algoScoreText');
+            const algoScoreBar = document.getElementById('algoScoreBar');
+
+            const algoPercent = Math.min(100, Math.round(35 + (count / 30) * 65));
+            let cadenceLabel = `${activeDaysCount}x por semana • Constância Ativa`;
+            let algoLabel = `${algoPercent}% • Crescimento Estável`;
+
+            if (count >= 28) {
+                cadenceLabel = `7x por semana • Todo Dia Vídeo Novo 🔥`;
+                algoLabel = `100% • Dominância Diária no Feed 👑`;
+            } else if (count >= 20) {
+                cadenceLabel = `${activeDaysCount}x por semana • Escala Acelerada 🚀`;
+                algoLabel = `${algoPercent}% • Explosão de Alcance`;
+            } else if (count >= 12) {
+                cadenceLabel = `${activeDaysCount}x por semana • Ritmo Ideal 🔥`;
+                algoLabel = `${algoPercent}% • Alto Alcance Orgânico`;
+            }
+
+            if (cadenceBadge) cadenceBadge.textContent = cadenceLabel;
+            if (algoScoreText) algoScoreText.textContent = algoLabel;
+            if (algoScoreBar) algoScoreBar.style.width = `${algoPercent}%`;
+        }
+
+        function updateTierPillsHighlight(count) {
+            const pillBase = document.getElementById('tierPill-base');
+            const pillMid = document.getElementById('tierPill-mid');
+            const pillMax = document.getElementById('tierPill-max');
+            if (!pillBase || !pillMid || !pillMax) return;
+
+            const inactiveClass = 'py-2 px-2 rounded-xl border text-center font-mono text-[11px] transition-all duration-300 bg-white/[0.03] border-white/10 text-gray-400 hover:border-white/25';
+            pillBase.className = inactiveClass;
+            pillMid.className = inactiveClass;
+            pillMax.className = inactiveClass;
+
+            if (count >= 20) {
+                pillMax.className = 'py-2 px-2 rounded-xl border text-center font-mono text-[11px] transition-all duration-300 bg-neonEmerald/15 border-neonEmerald/60 text-neonEmerald shadow-md shadow-neonEmerald/10 scale-[1.02]';
+            } else if (count >= 12) {
+                pillMid.className = 'py-2 px-2 rounded-xl border text-center font-mono text-[11px] transition-all duration-300 bg-neonCyan/15 border-neonCyan/60 text-neonCyan shadow-md shadow-neonCyan/10 scale-[1.02]';
+            } else {
+                pillBase.className = 'py-2 px-2 rounded-xl border text-center font-mono text-[11px] transition-all duration-300 bg-neonPurple/20 border-neonPurple/60 text-white shadow-md shadow-neonPurple/10 scale-[1.02]';
+            }
+        }
+
+        function applyPackagePreset(preset) {
+            playUISound('whoosh');
+            const slider = document.getElementById('videoCountSlider');
+            const addonExpress = document.getElementById('addonExpress');
+            const card = document.getElementById('addonExpressCard');
+
+            if (preset === 'start') slider.value = 4;
+            else if (preset === 'creator') slider.value = 12;
+            else if (preset === 'scale') slider.value = 30;
+
+            if (addonExpress) {
+                addonExpress.checked = false;
+                if (card) card.classList.remove('border-amber-400', 'bg-amber-500/[0.08]', 'shadow-lg', 'shadow-amber-500/10');
+            }
+            updateCalculator();
+        }
+
+        function onExpressAddonChange() {
+            const cb = document.getElementById('addonExpress');
+            const card = document.getElementById('addonExpressCard');
+            if (cb.checked) {
+                playUISound('pop');
+                if (card) card.classList.add('border-amber-400', 'bg-amber-500/[0.08]', 'shadow-lg', 'shadow-amber-500/10');
+                showToast('⚡ Entrega Expressa 24h ativada no pacote!');
+            } else {
+                playUISound('click');
+                if (card) card.classList.remove('border-amber-400', 'bg-amber-500/[0.08]', 'shadow-lg', 'shadow-amber-500/10');
+            }
+            updateCalculator();
+        }
+
+        function updateCalculator() {
+            const count = parseInt(document.getElementById('videoCountSlider').value, 10);
+            const expressCheckbox = document.getElementById('addonExpress');
+            const hasExpress = expressCheckbox ? expressCheckbox.checked : false;
+
+            document.getElementById('sliderCountDisplay').textContent = count;
+
+            const baseUnit = CONFIG_GERAL.PRECO_BASE_POR_VIDEO;
+            const expressPrice = CONFIG_GERAL.PRECO_ENTREGA_EXPRESSA ?? CONFIG_GERAL.EXTRA_EXPRESS_24H;
+            let discountedUnit = baseUnit;
+            let tierName = 'Pacote Start ⚡';
+            let badgeText = `R$ ${baseUnit}/VÍDEO`;
+
+            if (count >= 20) {
+                discountedUnit = CONFIG_GERAL.PRECO_DESCONTO_20_MAIS;
+                tierName = 'Escala Diária 👑';
+                badgeText = `DESCONTO TOP (R$ ${discountedUnit}/UN)`;
+            } else if (count >= 12) {
+                discountedUnit = CONFIG_GERAL.PRECO_DESCONTO_12_MAIS;
+                tierName = 'Pacote Creator Pro 🔥';
+                badgeText = `DESCONTO PRO (R$ ${discountedUnit}/UN)`;
+            }
+
+            const addonUnit = hasExpress ? expressPrice : 0;
+            const finalUnit = discountedUnit + addonUnit;
+            const total = finalUnit * count;
+            const oldTotal = (baseUnit + addonUnit) * count;
+            const hoursSaved = count * 3;
+
+            document.getElementById('summaryTierName').textContent = tierName;
+            document.getElementById('discountBadge').textContent = badgeText;
+            document.getElementById('hoursSavedDisplay').textContent = `~${hoursSaved} horas`;
+            document.getElementById('pricePerVideoDisplay').textContent = `R$ ${finalUnit}`;
+            document.getElementById('totalOldPrice').textContent = discountedUnit < baseUnit ? `R$ ${oldTotal.toLocaleString('pt-BR')}` : '';
+            document.getElementById('totalPriceDisplay').textContent = `R$ ${total.toLocaleString('pt-BR')}`;
+
+            const includedLabel = document.getElementById('includedTitleLabel');
+            if (includedLabel) includedLabel.textContent = `Já incluso nos R$ ${discountedUnit}/vídeo:`;
+
+            updateTierPillsHighlight(count);
+            renderWeeklySimulator(count);
+
+            const extrasStr = hasExpress ? ' + Entrega Expressa 24h' : ' (Edição Completa Alta Retenção)';
+            currentCalculatedMessage = `Opa! Vim pelo site da *Zeerow Studio* e simulei o *${tierName}* com *${count} vídeos por mês*${extrasStr}. Valor: R$ ${total.toLocaleString('pt-BR')} (R$ ${finalUnit}/vídeo). Tem vaga aberta na agenda?`;
+        }
+
+        function sendViaWhatsApp() {
+            playUISound('whoosh');
+            const encoded = encodeURIComponent(currentCalculatedMessage || 'Opa! Vim pelo portfólio da Zeerow Studio e quero fazer um orçamento!');
+            window.open(`https://wa.me/${CONFIG_GERAL.WHATSAPP_NUMERO}?text=${encoded}`, '_blank');
+        }
+
+        function toggleFaq(index) {
+            playUISound('click');
+            const content = document.getElementById(`faqContent${index}`);
+            const icon = document.getElementById(`faqIcon${index}`);
+            const isHidden = content.classList.contains('hidden');
+
+            if (isHidden) {
+                content.classList.remove('hidden');
+                icon.style.transform = 'rotate(45deg)';
+            } else {
+                content.classList.add('hidden');
+                icon.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        function openContactModal(source) {
+            playUISound('whoosh');
+            const modal = document.getElementById('contactModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        }
+
+        function closeContactModal() {
+            playUISound('click');
+            const modal = document.getElementById('contactModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
+        }
+
+        function redirectToDiscord() {
+            playUISound('whoosh');
+            showToast(`🚀 Abrindo Discord (${CONFIG_GERAL.DISCORD_USER})...`);
+            window.open(CONFIG_GERAL.DISCORD_URL, '_blank');
+        }
+
+        function submitQuickBriefing(e) {
+            e.preventDefault();
+            const name = document.getElementById('briefName').value.trim();
+            const niche = document.getElementById('briefNiche').value;
+            const customMsg = `Opa! Sou *${name}* (Nicho: ${niche}). Vi seu portfólio Short-Form e gostaria de conversar sobre a edição dos meus vídeos!`;
+            const encoded = encodeURIComponent(customMsg);
+            closeContactModal();
+            window.open(`https://wa.me/${CONFIG_GERAL.WHATSAPP_NUMERO}?text=${encoded}`, '_blank');
+        }
+
+        let toastTimeout = null;
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const msgEl = document.getElementById('toastMessage');
+            msgEl.textContent = message;
+            toast.classList.remove('opacity-0', 'translate-y-4');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            if (toastTimeout) clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-4');
+            }, 3400);
+        }
+
+        function animateCounter(el) {
+            const target = parseInt(el.getAttribute('data-target'), 10);
+            const duration = 1600;
+            const startTime = performance.now();
+
+            function update(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                el.textContent = Math.floor(eased * target);
+                if (progress < 1) requestAnimationFrame(update);
+                else el.textContent = target;
+            }
+            requestAnimationFrame(update);
+        }
+let idiomaAtual = 'pt';
+
+
+function changeLanguage(lang, index) {
+    if (idiomaAtual === lang) return;
+    idiomaAtual = lang;
+
+    // 1. Move a pílula neon
+    const glider = document.getElementById('langGlider');
+    if (glider) {
+        glider.style.transform = `translateX(${index * 36}px)`;
+    }
+
+    // 2. Atualiza a cor do botão ativo
+    ['pt', 'en', 'es'].forEach(code => {
+        const btn = document.getElementById(`btnLang-${code}`);
+        if (btn) {
+            btn.classList.toggle('active', code === lang);
+        }
+    });
+
+    // 3. Troca a imagem da bandeira com animação 3D Flip
+    const flagImg = document.getElementById('langFlagImg');
+    if (flagImg && DADOS_IDIOMAS[lang]) {
+        flagImg.classList.remove('flag-flip');
+        void flagImg.offsetWidth; // Reinicia a animação
+        flagImg.src = DADOS_IDIOMAS[lang].bandeira;
+        flagImg.alt = DADOS_IDIOMAS[lang].alt;
+        flagImg.classList.add('flag-flip');
+    }
+
+    // 4. Som da interface + Notificação Toast
+    if (typeof playUISound === 'function') playUISound('pop');
+    if (typeof showToast === 'function') showToast(DADOS_IDIOMAS[lang].toast);
+}
+
+        window.onload = function () {
+            initPricingLabels();
+            renderPortfolio();
+            updateCalculator();
+            updateTimelineOnScroll();
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+
+                        const counters = entry.target.querySelectorAll('.counter-value:not(.counted)');
+                        counters.forEach(counter => {
+                            counter.classList.add('counted');
+                            animateCounter(counter);
+                        });
+
+                        const bars = entry.target.querySelectorAll('.scroll-progress-bar');
+                        bars.forEach(bar => {
+                            bar.style.width = bar.getAttribute('data-width');
+                        });
+                    }
+                });
+            }, { threshold: 0.16 });
+
+            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+        };
+    </script>
+</body>
+</html>
